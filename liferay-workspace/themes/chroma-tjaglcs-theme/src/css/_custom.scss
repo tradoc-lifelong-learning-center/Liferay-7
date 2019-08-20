@@ -1,0 +1,271 @@
+/* These inject tags are used for dynamically creating imports for themelet styles, you can place them where ever you like in this file. */
+/* inject:imports */
+/* endinject */
+/* This file allows you to override default styles in one central location for easier upgrade and maintenance. */
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+@import "compass";
+@import "mixins";
+/*NOTE!!!!: If redeploy isn't updating CSS, try removing Chroma files from here:
+C:\Liferay\7.2\liferay-ce-portal-7.2.0-ga1\tomcat-9.0.17\work\Catalina\localhost\ROOT\css
+*/
+
+@import "_custom_variables";
+@import "layout/_custom_layout";
+@import "navigation/_custom_navbar";
+
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url("../fonts/opensans/OpenSans-Regular.eot");
+	src: local('Open Sans'), local('OpenSans'), url("../fonts/opensans/OpenSans-Regular.eot?#iefix") format('embedded-opentype'), url("../fonts/opensans/OpenSans-Regular.woff") format('woff'), url("../fonts/opensans/OpenSans-Regular.ttf") format('truetype');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: bold;
+	font-weight: 600;
+	src: url("../fonts/opensans/OpenSans-Bold.ttf");
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: light;
+	font-weight: 300;
+	src: url("../fonts/opensans/OpenSans-Light.eot");
+	src: local('Open Sans Light'), local('OpenSans-Light'), url("../fonts/opensans/OpenSans-Light.eot?#iefix") format('embedded-opentype'), url("../fonts/opensans/OpenSans-Light.woff") format('woff'), url("../fonts/opensans/OpenSans-Light.ttf") format('truetype');
+}
+/* ---------- Base styles ---------- */
+body {
+	background-color: $colorBackgroundBody;
+	font-family: 'Open Sans';
+	font-weight: 400;
+
+	a {
+		color: $colorPrimary;
+	}
+}
+
+.container {
+	//set max width to XL for container (don't like how max width decreases as window shrinks)
+	max-width: map-get($container-max-widths, "xl");
+}
+
+#banner {
+	margin-bottom: 1.5rem;
+
+
+	.banner__inner-wrapper {
+		min-height: 110px;
+		background-color: $colorBackgroundHeaderFooter;
+		box-shadow: 0 2px 5px 0 rgba(0,0,0,0.4);
+
+		h1 {
+			color: $colorTextHeader;
+		}
+
+		.container {
+			padding-left: 0;
+			padding-right: 0;
+		}
+
+		.container .row > div {
+			display: flex;
+			min-height: 110px;
+		}
+
+		.row {
+			/*overrid _liferay display:block on :first-child*/
+			display: flex;
+			justify-content: flex-end;
+			position: relative;
+			width: 100%;
+			flex-wrap: nowrap;
+			margin: 0;
+		}
+	}
+
+
+	.banner__nav-column {
+		justify-content: flex-end;
+		padding-right: 0;
+		z-index: 10;
+		margin-right: 15px;
+		@include media-breakpoint-down(md) {
+			/*make navbar and nav column static so mobile menu will work correctly as absolute*/
+			position: static;
+		}
+	}
+
+	.banner__logo-column {
+		justify-content: start;
+		flex-direction: column;
+		padding-left: 0;
+		/*This is to allow the navbar to overlap the logo like in the previous version of the theme*/
+		width: auto;
+		left: 0;
+		position: absolute;
+		margin-left: 15px;
+
+		h1 {
+			display: inline;
+		}
+
+		img {
+			height: 120px;
+			margin-top: 9px;
+			margin-bottom: 9px;
+		}
+	}
+
+	.banner__background--fixed {
+		width: 100%;
+		height: 367px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		background-color: $colorPrimary;
+		z-index: -1;
+	}
+
+
+	.logo:hover {
+		/*.logo style is applied to hyperlink, not img...*/
+		text-decoration: none;
+	}
+
+	/*remove headers and margins from banner portlets (nav, search)*/
+	.portlet {
+		margin-bottom: 0;
+	}
+	.portlet-header {
+		display: none;
+	}
+}
+
+
+#content {
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 300px;
+	padding: 20px;
+}
+
+#footer {
+	background-color: $colorBackgroundHeaderFooter;
+	padding: 2rem 1rem;
+
+	/*right align second column of footer when window is wide enough for 2col*/
+	.container {
+		.row div:last-of-type {
+			@media screen and (min-width:map-get($grid-breakpoints, "sm")) {
+				text-align: right;
+			}
+		}
+	}
+
+	.footer-contact-container {
+		display: flex;
+		flex-direction: column;
+
+		p {
+			flex: 0 0 auto;
+		}
+
+		.sign-in-link {
+			flex: 1 1 auto;
+			/*align sign in link to bottom of parent para*/
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+		}
+	}
+
+	p, a {
+		color: $colorTextFooter;
+		font-size: 0.875rem;
+		margin: 0;
+	}
+
+}
+
+/*Portlets*/
+.portlet {
+	margin-bottom: 18px;
+}
+
+.portlet-decorate {
+	background-color: #FFF;
+	box-shadow: 0 0 3px #999;
+}
+
+.portlet-decorate,
+.portlet-decorate .portlet-content {
+	border-radius: 4px;
+}
+
+
+
+/*User menu styles*/
+.portlet-user-personal-bar{
+	background-color:transparent;
+	box-shadow: none;
+
+	.sticker{
+		box-shadow: none;
+		border: 2px solid $white;
+		color: $white;
+		transition: all .25s ease;
+		background-color: transparent;
+		border-radius:100%;
+	}
+
+	.sticker:hover{
+		background-color: $white;
+		color: $colorBackgroundHeaderFooter;
+	}
+
+}
+
+/*Hello world portlet CSS*/
+
+.portlet-hello-world .portlet .portlet-content {
+	background: #4885B7 url("../images/portlet_hello_world/welcome_bg.png") bottom left;
+	background-clip: padding-box;
+	background-size: cover;
+	color: $white;
+	min-height: 390px;
+	padding-top: 30px;
+	@include media-breakpoint-up(sm) {
+		padding-left: 50px;
+	}
+
+	.portlet-header {
+		margin-bottom: 0;
+	}
+
+	.portlet-title-text {
+		color: $white;
+		font-size: 2rem;
+		font-weight: 700;
+		text-transform: none;
+	}
+
+	.portlet-body {
+		padding-right: 30%;
+		@include media-breakpoint-up(sm) {
+			padding-right: 60%;
+		}
+	}
+}

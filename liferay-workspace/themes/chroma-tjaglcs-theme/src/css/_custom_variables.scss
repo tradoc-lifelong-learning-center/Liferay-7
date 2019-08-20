@@ -1,0 +1,93 @@
+$colorPrimary: #000666; /*Dark blue for headers, banner fixed background*/
+
+$colorGreyStandard: #505050; /*Dark grey for header, footer, nav*/
+$colorGreyDark: darken($colorGreyStandard, 9%);
+$colorGreyLight: lighten($colorGreyStandard, 15%);
+$colorGreyLighter: lighten($colorGreyStandard, 50%);
+$colorGreyLightest: lighten($colorGreyStandard, 57%);
+
+$colorBackgroundBody: #F9F9F9;
+
+$colorBackgroundHeaderFooter: $colorGreyStandard;
+
+$colorTextSearchBox: $colorGreyLightest;
+$colorBackgroundSearchBox: $colorGreyLight;
+
+/*Navigation color variables*/
+$colorTextNavLevelOne: $colorGreyLightest;
+$colorBackgroundNavLevelOne: $colorGreyStandard;
+
+$colorTextNavLevelOneHover: $colorGreyStandard;
+$colorBackgroundNavLevelOneHover: $colorGreyLightest;
+
+$colorTextNavLevelTwo: $colorGreyStandard;
+$colorBackgroundNavLevelTwo: $colorGreyLightest;
+
+$colorTextNavLevelTwoHover: $colorGreyStandard;
+$colorBackgroundNavLevelTwoHover: $colorGreyLighter;
+
+
+$colorTextMobileNavLevelOne: $colorGreyLightest;
+$colorBackgroundMobileNavLevelOne: $colorGreyDark;
+
+$colorTextMobileNavLevelOneHover: $colorTextNavLevelOneHover;
+$colorBackgroundMobileNavLevelOneHover: $colorBackgroundNavLevelOneHover;
+/*
+$colorTextMobileNavLevelTwo
+$colorBackgroundMobileNavLevelTwo
+*/
+$colorTextMobileNavLevelTwoHover: $colorGreyDark;
+$colorBackgroundMobileNavLevelTwoHover: $colorGreyLighter;
+
+
+
+$colorTextNavigation:#E0E0E0; /*the color for the non-hover first level nav items*/
+$colorBackgroundNavDropdown: #E0E0E0; /*This is the background hover color for the first level nav items*/
+$colorBackgroundNavDropdownHover: darken($colorBackgroundNavDropdown, 15%);
+
+/*$colorBackgroundNavMobile: #3a3a3a; *//*the initial, non-hover color for the mobile nav*/
+$colorTextNavigationMobileOpen: #3a3a3a;
+
+$colorTextFooter: $colorGreyLightest;
+$colorTextHeader: $colorGreyLightest;
+/*$colorHeading: #5E60B2;*/
+$colorHighlightWarn: #953537;
+$colorHighlightInfo: #5CB260;
+
+$colorHudCrumbBackground: #000;
+$colorHudCrumbText: #FFF;
+
+
+
+
+$navbar-toggler-icon-bg:       str-replace(url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='#{$colorTextNavigation}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"), "#", "%23") !default;
+$navbar-toggler-color:  $colorTextNavigation;
+$navbar-mobile-top-distance: 90px;
+
+// Grid breakpoints
+//
+// Define the minimum dimensions at which your layout will change,
+// adapting to different screen sizes, for use in media queries.
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1280px,
+  xxl: 1440px
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1248px,
+  xxl: 1400px
+);
+
+/*update colors for search button when hovered or expanded*/
+@mixin search-button--selected{
+  background-color: $colorTextNavigation;
+  color: $colorBackgroundHeaderFooter;
+}

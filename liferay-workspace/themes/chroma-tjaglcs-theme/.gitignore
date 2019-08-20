@@ -1,0 +1,5 @@
+node_modules
+build
+liferay-theme.json
+.web_bundle_build
+.yo-rc.json

@@ -1,0 +1,201 @@
+@import "../_custom_variables";
+
+#navigationCollapse:not(.show) {
+	padding-right: 0;
+	/*override breakpoint from liferay.css*/
+	@include media-breakpoint-down(lg) {
+		display: none;
+	}
+
+
+
+}
+/*This is the code for the mobile nav menu when it's being shown*/
+#navigationCollapse.show {
+	/*include breakpoint so mobile nav closes after resizing past a certain point*/
+	@include media-breakpoint-down(md) {
+		position: absolute;
+		top: $navbar-mobile-top-distance;
+		left: 0;
+		right: 0;
+		background-color: $colorBackgroundMobileNavLevelOne;
+		padding: 1rem;
+		z-index: 5;
+
+		.nav-item{
+			background-color: $colorBackgroundMobileNavLevelOne;
+		}
+
+		.nav-item.open{
+			background-color: $colorBackgroundMobileNavLevelOneHover;
+			color: $colorTextMobileNavLevelOneHover;
+		}
+
+		/*.nav-item .dropdown-item:hover{
+			background-color: $colorBackgroundMobileNavLevelOneHover;
+		}*/
+
+		.nav-item li:hover{
+			background-color: $colorBackgroundMobileNavLevelTwoHover;
+			color: $colorTextMobileNavLevelTwoHover;
+		}
+
+	}
+}
+
+.navbar {
+	padding-right: 0;
+	@include media-breakpoint-down(md) {
+		position: static;
+	}
+
+	/*In LR, .nav-item (and .dropdown) is the first level navigation*/
+	.nav-item {
+		padding: 0 6px;
+
+		@include media-breakpoint-up(lg) {
+			border-left: thin solid $colorTextNavLevelOne;
+		}
+	}
+
+	.nav-item:not(:last-of-type) {
+		@include media-breakpoint-down(md) {
+			border-bottom: thin solid $colorTextNavLevelOne;
+		}
+	}
+
+	.nav-item.open .nav-link{
+		background-color: $colorBackgroundNavLevelOneHover;
+		color: $colorTextNavLevelOneHover;
+	}
+
+	.nav-link{
+		/*nav link is the first level navigation item*/
+		color: $colorTextNavLevelOne;
+		font-size: 0.9375rem;
+		font-weight: normal;
+		text-transform: uppercase;
+	}
+
+	/*.dropdown-menu is the second level navigation*/
+	.nav-item .dropdown-menu {
+		background-color: $colorBackgroundNavLevelTwo;
+		color: $colorTextNavLevelTwo;
+		/*border: 1px solid rgba(0,0,0,0.2);*/
+		box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+		left: 5px;
+		margin: 0;
+		border-radius: 0;
+	}
+
+	.nav-item .dropdown-item:hover{
+		/*dropdown item is the second level nav item*/
+		background-color: $colorBackgroundNavLevelTwoHover;
+		color: $colorTextNavLevelTwoHover;
+	}
+
+
+
+	/*right align last dropdown so it doesn't spill off page*/
+	.nav-item:last-of-type .dropdown-menu {
+		left: inherit;
+		right: 5px;
+	}
+
+	.navbar-nav {
+		@include media-breakpoint-down(md) {
+			flex-direction: column;
+			margin-top: 1rem;
+		}
+	}
+
+	/*hamburger button*/
+	.navbar-toggler {
+		color: $navbar-toggler-color;
+		border-color: $navbar-toggler-color;
+		height: 40px;
+	}
+
+	.navbar-toggler-icon {
+		background-image: $navbar-toggler-icon-bg;
+	}
+}
+
+
+
+/*site search*/
+/*(including in nav CSS because site search is nested with nav )*/
+#siteSearch {
+	.search-bar-keywords-input-wrapper {
+		/*override min width so I can collapse box*/
+		min-width: 0;
+	}
+
+	.search-bar-keywords-input {
+		width: 0;
+		padding-left: 0;
+		padding-right: 0;
+		@include single-transition(width 0.3s ease);
+		@include media-breakpoint-down(md) {
+			/*add padding inside search box on smaller screens*/
+			padding: 0.75rem;
+			transition: none;
+		}
+	}
+
+	.search-bar-keywords-input--expanded {
+		width: 160px;
+		padding: 0 0.5rem;
+	}
+
+	.portlet-search-bar {
+		/*full width search bar on mobile*/
+		@include media-breakpoint-down(lg) {
+			width: 100%;
+		}
+	}
+
+	.search-bar-search-button,
+	.search-bar-search-button-wrapper {
+		background-color: transparent;
+	}
+
+	.search-bar-search-button--selected {
+		@include search-button--selected;
+	}
+
+	.search-bar-search-button:hover {
+		@include search-button--selected;
+	}
+	/*styling button/input halves of the search box separately*/
+	.search-bar-search-button-wrapper {
+		padding: 0;
+		min-height: 38px;
+	}
+
+	.form-control {
+		background-color: $colorBackgroundSearchBox;
+	}
+
+	.form-control,
+	.search-bar-search-button-wrapper {
+		color: $colorTextSearchBox;
+		border: none;
+		border-radius: 0;
+
+		&::placeholder {
+			color: $colorTextSearchBox;
+		}
+	}
+
+	.search-bar-search-button {
+		padding: 4px 12px;
+		border-radius: 0;
+		margin: 0;
+		height: 100%;
+	}
+
+	.search-bar-search-button:focus {
+		text-decoration: none;
+	}
+}

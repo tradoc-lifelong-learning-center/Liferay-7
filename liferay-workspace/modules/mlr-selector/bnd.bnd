@@ -1,0 +1,4 @@
+Bundle-Name: mlr-selector
+Bundle-SymbolicName: mil.tjaglcs.mlrselector
+Bundle-Version: 1.0.0
+Export-Package: mil.tjaglcs.mlrselector.constants

@@ -3,9 +3,34 @@
 
 <layout-templates>
 	<custom>
-		<layout-template id="tjaglcs-layouts" name="tjaglcs-layouts">
-			<template-path>/tjaglcs-layouts.ftl</template-path>
-			<thumbnail-path>/tjaglcs-layouts.png</thumbnail-path>
+		<layout-template id="columns-1-1-1" name="1-1-1 Columns">
+			<template-path>/columns-1-1-1.ftl</template-path>
+			<thumbnail-path>/columns-1-1-1.png</thumbnail-path>
+		</layout-template>
+		
+		<layout-template id="columns-1-4-1" name="1-4-1 Columns">
+			<template-path>/columns-1-4-1.ftl</template-path>
+			<thumbnail-path>/columns-1-4-1.png</thumbnail-path>
+		</layout-template>
+		
+		<layout-template id="columns-1-4" name="1-4 Columns (25/25/25/25)">
+			<template-path>/columns-1-4.ftl</template-path>
+			<thumbnail-path>/columns-1-4.png</thumbnail-path>
+		</layout-template>
+		
+		<layout-template id="columns-2-3-1" name="2-3-1 Columns">
+			<template-path>/columns-2-3-1.ftl</template-path>
+			<thumbnail-path>/columns-2-3-1.png</thumbnail-path>
+		</layout-template>
+		
+		<layout-template id="columns-4-1-4" name="4-1-4 Columns">
+			<template-path>/columns-4-1-4.ftl</template-path>
+			<thumbnail-path>/columns-4-1-4.png</thumbnail-path>
+		</layout-template>
+		
+		<layout-template id="columns-2-1" name="2-1 Columns (50/50)">
+			<template-path>/columns-2-1.ftl</template-path>
+			<thumbnail-path>/columns-2-1.png</thumbnail-path>
 		</layout-template>
 	</custom>
 </layout-templates>

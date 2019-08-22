@@ -32,7 +32,7 @@
     #set($issueString = "Issue " + $publicationIssue.getData() )
 #end
 
-######Author Info
+######Author Bylines and notes
 
 #if (!$publicationAuthors.getSiblings().isEmpty())
     #set ($separator = ",")
@@ -63,7 +63,27 @@
 
 	#end
 
+    ##author notes
+    #set ($bioNotRef = $bioNotRefCharacter)
+
+    #set ($authorNotesString = "")
+
+    #foreach ($cur_publicationAuthors in $publicationAuthors.getSiblings())
+
+        #if ($validator.isNotNull($cur_publicationAuthors.AuthorBioNote.getData()))
+
+            #set ($authorNotesString = $authorNotesString + "<p id='article-author-bio-" + $velocityCount + "'><sup><a href='#article-author-" + $velocityCount + "'>[" + $bioNotRef + "]</a></sup>" + $cur_publicationAuthors.AuthorBioNote.getData() + "</p>")
+
+            #set($bioNotRef = $bioNotRef + $bioNotRefCharacter)
+
+
+        #end
+
+
+    #end
+
 #end
+
 
 
 
@@ -192,9 +212,7 @@ color: blue !important;
 
 <article>
 <header>
-##NOTE: condition $publicationTitleNote.getData() works on the tjaglcs public instance of Liferay
-##but not locally. $publicationTitleNote.getData()!="" works locally, but not online.
-##Using both.
+
 <h1 class="article--title">$reserved-article-title.getData()##
 $titleNoteRef##
 #if ($publicationSubtitle.getData() && $publicationSubtitle.getData()!="")##
@@ -216,14 +234,8 @@ $titleNoteRef##
 
 <footer class="article--footer">
 <hr/>
-#foreach ($cur_publicationAuthors in $publicationAuthors.getSiblings())
-    #if($cur_publicationAuthors.getChild('publicationAuthorBio').getData() && $cur_publicationAuthors.getChild('publicationAuthorBio').getData()!="")
-
-    <p id="article-author-bio-$velocityCount">
-        <sup><a href="#article-author-$velocityCount">[*]</a></sup>$cur_publicationAuthors.getChild('publicationAuthorBio').getData()
-    </p>
-    #end
-#end
+####Insert author notes
+$authorNotesString
 
 
 ####Insert title notes
@@ -235,7 +247,8 @@ $subtitleNoteText
 
 <div>
 
-#if ($publicationEndNotes.getData() && $publicationEndNotes.getData()!="")
+
+#if ($validator.isNotNull($publicationEndNotes.getData()))
 	$publicationEndNotes.getData()
 #end
 

@@ -9,6 +9,71 @@
 
 
 ####VARIABLES
+
+######Title Notes
+#set ($publicationPublishDate_Data = $getterUtil.getLong($publicationPublishDate.getData()))
+
+####Set title, subtitle notes
+
+#set ($titleNoteRef = "")
+#set ($titleNoteText = "")
+#set ($subtitleNoteRef = "")
+#set ($subtitleNoteText = "")
+
+##first check if they exist
+#if($publicationTitleNote.getData() && $publicationSubtitleNote.getData())
+
+##then check if they're empty
+######for articles that include both
+#if($publicationTitleNote.getData()!="" && $publicationSubtitleNote.getData()!="")##
+    #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
+    #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
+    #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">2</a></sup>')
+    #set ($subtitleNoteText = '<p class="Basic-Paragraph"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">2</a> </span>' + $publicationSubtitleNote.getData() + '</p>')
+#end
+
+
+
+######for articles that only include title note
+
+#if($publicationTitleNote.getData()!="" && $publicationSubtitleNote.getData()=="")##
+    #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
+    #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
+
+    #set ($subtitleNoteRef = '')
+    #set ($subtitleNoteText = '')
+#end
+
+
+
+
+######for articles that only include subtitle note
+#if($publicationTitleNote.getData()=="" && $publicationSubtitleNote.getData()!="")##
+    #set ($titleNoteRef = '')
+    #set ($titleNoteText = '')
+    #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">1</a></sup>')
+    #set ($subtitleNoteText = '<p class="Basic-Paragraph"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">1</a> </span>' + $publicationSubtitleNote.getData() + '</p>')
+#end
+
+
+
+#end
+
+
+
+
+
+
+######Article Title
+
+#set($articleTitle = $reserved-article-title.getData() + $titleNoteRef)
+
+
+#if ($validator.isNotNull($publicationSubtitle.getData()))
+    #set($articleTitle = $articleTitle + ": </br>" + $publicationSubtitle.getData() + $subtitleNoteRef)
+#end
+
+
 ######Publication Year
 #set ($publicationPublishDate_Data = $getterUtil.getString($publicationPublishDate.getData()))
 
@@ -156,72 +221,13 @@ margin-top:2rem;
 color: blue !important;
 }
 </style>
-#set ($publicationPublishDate_Data = $getterUtil.getLong($publicationPublishDate.getData()))
-
-####Set title, subtitle notes
-
-#set ($titleNoteRef = "")
-#set ($titleNoteText = "")
-#set ($subtitleNoteRef = "")
-#set ($subtitleNoteText = "")
-
-##first check if they exist
-#if($publicationTitleNote.getData() && $publicationSubtitleNote.getData())
-
-##then check if they're empty
-######for articles that include both
-#if($publicationTitleNote.getData()!="" && $publicationSubtitleNote.getData()!="")##
-    #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
-    #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
-    #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">2</a></sup>')
-    #set ($subtitleNoteText = '<p class="Basic-Paragraph"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">2</a> </span>' + $publicationSubtitleNote.getData() + '</p>')
-#end
-
-
-
-######for articles that only include title note
-
-#if($publicationTitleNote.getData()!="" && $publicationSubtitleNote.getData()=="")##
-    #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
-    #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
-
-    #set ($subtitleNoteRef = '')
-    #set ($subtitleNoteText = '')
-#end
-
-
-
-
-######for articles that only include subtitle note
-#if($publicationTitleNote.getData()=="" && $publicationSubtitleNote.getData()!="")##
-    #set ($titleNoteRef = '')
-    #set ($titleNoteText = '')
-    #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">1</a></sup>')
-    #set ($subtitleNoteText = '<p class="Basic-Paragraph"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">1</a> </span>' + $publicationSubtitleNote.getData() + '</p>')
-#end
-
-
-
-#end
-
-
-
-
 
 
 
 <article>
 <header>
 
-<h1 class="article--title">$reserved-article-title.getData()##
-$titleNoteRef##
-#if ($publicationSubtitle.getData() && $publicationSubtitle.getData()!="")##
-: </br>$publicationSubtitle.getData()##
-<sup>$subtitleNoteRef##
-#end
-
-
-</h1>
+<h1 class="article--title">$articleTitle</h1>
 
 <p class="article--volume-info">$volumeString $issueString $year</p>
 

@@ -32,6 +32,40 @@
     #set($issueString = "Issue " + $publicationIssue.getData() )
 #end
 
+######Author Info
+
+#if (!$publicationAuthors.getSiblings().isEmpty())
+    #set ($separator = ",")
+    #set ($bioNotRefCharacter = "*")
+    #set ($bioNotRef = $bioNotRefCharacter)
+
+    #set ($authorString = "")
+
+	#foreach ($cur_publicationAuthors in $publicationAuthors.getSiblings())     ##Add author name to string
+		#set($authorString = $authorString + " " + $cur_publicationAuthors.getData())
+
+		##If there are more than 3 authors, add the separator
+		#if($publicationAuthors.getSiblings().size()>=3 && $velocityCount!=$publicationAuthors.getSiblings().size())
+		    #set($authorString = $authorString + $separator)
+        #end
+
+        ##If there's an author bio, link to it
+        #if($validator.isNotNull($cur_publicationAuthors.AuthorBioNote.getData()))
+
+            #set($authorString = $authorString + "<span id='article-author-" + $velocityCount + "'><sup><a href='#article-author-bio-" + $velocityCount + "'>[" + $bioNotRef + "]</a></sup></span>")
+        #set ($bioNotRef = $bioNotRef + $bioNotRefCharacter)
+        #end
+
+        ##if there are more than two authors, add "and"
+        #if ($publicationAuthors.getSiblings().size()>1 && $velocityCount==$publicationAuthors.getSiblings().size() - 1)
+            #set($authorString = $authorString + " and ")
+        #end
+
+	#end
+
+#end
+
+
 
 
 
@@ -173,24 +207,9 @@ $titleNoteRef##
 
 <p class="article--volume-info">$volumeString $issueString $year</p>
 
-#if (!$publicationAuthors.getSiblings().isEmpty())
-<p class="article--byline">
-    #set ($separator = ",")
+<p class="article--byline">$authorString</p>
 
-##NOTE: any white space here may wind up in the output, which is why it's not indented below
-#foreach ($cur_publicationAuthors in $publicationAuthors.getSiblings())
-$cur_publicationAuthors.getData()##
-#if($publicationAuthors.getSiblings().size()>=3 && $velocityCount!=$publicationAuthors.getSiblings().size())$separator##
-#end##
-#if($cur_publicationAuthors.getChild('publicationAuthorBio').getData() && $cur_publicationAuthors.getChild('publicationAuthorBio').getData()!="")##
-<span id="article-author-$velocityCount"><sup><a href="#article-author-bio-$velocityCount">[*]</a></sup></span>##
-#end##
-#if ($publicationAuthors.getSiblings().size()>1 && $velocityCount==$publicationAuthors.getSiblings().size() - 1)##
- and ##
-#end##
 
-	#end
-</p>#end
 </header>
 
 <div class="article--body">$publicationContent.getData()</div>

@@ -7,7 +7,6 @@
 ##
 
 
-
 ####VARIABLES
 
 ######Title Notes
@@ -28,9 +27,9 @@
 ######for articles that include both
 #if($validator.isNotNull($publicationTitleNote.getData()) && $validator.isNotNull($publicationSubtitleNote.getData()))##
     #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
-    #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
+    #set ($titleNoteText = '<div class="title-note-container"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</div>')
     #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">2</a></sup>')
-    #set ($subtitleNoteText = '<p class="Basic-Paragraph"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">2</a> </span>' + $publicationSubtitleNote.getData() + '</p>')
+    #set ($subtitleNoteText = '<div class="title-note-container"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">2</a> </span>' + $publicationSubtitleNote.getData() + '</div>')
 #end
 
 
@@ -38,7 +37,7 @@
 ######for articles that only include title note
 #if($validator.isNotNull($publicationTitleNote.getData()) && $validator.isNull($publicationSubtitleNote.getData()))##
     #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
-    #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
+    #set ($titleNoteText = '<div class="title-note-container"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</div>')
 
     #set ($subtitleNoteRef = '')
     #set ($subtitleNoteText = '')
@@ -52,7 +51,7 @@
     #set ($titleNoteRef = '')
     #set ($titleNoteText = '')
     #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">1</a></sup>')
-    #set ($subtitleNoteText = '<p class="Basic-Paragraph"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">1</a> </span>' + $publicationSubtitleNote.getData() + '</p>')
+    #set ($subtitleNoteText = '<div class="title-note-container"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">1</a> </span>' + $publicationSubtitleNote.getData() + '</div>')
 #end
 
 
@@ -191,7 +190,7 @@
     margin-bottom:3rem;
 }
 
-.article--byline {
+.journal-content-article .article--byline {
 	color:#000000;
 	font-family:"Times New Roman", serif;
 	font-size:14pt;
@@ -212,12 +211,24 @@
 	widows:1;
 }
 
-footer hr{
+.journal-content-article  .title-note-container p:first-of-type{
+    display:inline;
+}
+
+.journal-content-article a{
+    color:blue;
+}
+
+.journal-content-article footer{
+    font-size:14px;
+}
+
+.journal-content-article footer hr{
 margin-top:2rem;
 }
 
-._idEndnoteAnchor,
-._idEndnoteLink{
+.journal-content-article ._idEndnoteAnchor,
+.journal-content-article ._idEndnoteLink{
 color: blue !important;
 }
 </style>

@@ -1,0 +1,206 @@
+##
+## Web content templates are used to lay out the fields defined in a
+## web content structure.
+##
+## Please use the left panel to quickly add commonly used variables.
+## Autocomplete is also available and can be invoked by typing "$".
+##
+
+<style>
+.journal-content-article .article--title {
+	color:#000666;
+	font-family:"Adobe Caslon Pro", serif;
+	font-size:20pt;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:normal;
+	line-height: 125%;
+	margin-bottom:3rem;
+	margin-left:0;
+	margin-right:0;
+	margin-top:0;
+	orphans:1;
+	page-break-after:auto;
+	page-break-before:auto;
+	text-align:center;
+	text-decoration:none;
+	text-indent:0;
+	text-transform:none;
+	widows:1;
+}
+
+.journal-content-article .article--title sup{
+    font-size:14px;
+}
+
+.journal-content-article .article--volume-info{
+    font-size: 16pt;
+    font-family: Adobe Caslon Pro,Times New Roman;
+    line-height: 150%;
+    text-align: center;
+    margin-bottom:3rem;
+}
+
+.article--byline {
+	color:#000000;
+	font-family:"Times New Roman", serif;
+	font-size:14pt;
+	font-style:normal;
+	font-variant:small-caps;
+	font-weight:normal;
+	margin-bottom:1rem;
+	margin-left:0;
+	margin-right:0;
+	margin-top:0;
+	orphans:1;
+	page-break-after:auto;
+	page-break-before:auto;
+	text-align:center;
+	text-decoration:none;
+	text-indent:0;
+	text-transform:none;
+	widows:1;
+}
+
+footer hr{
+margin-top:2rem;
+}
+
+._idEndnoteAnchor,
+._idEndnoteLink{
+color: blue !important;
+}
+</style>
+#set ($publicationPublishDate_Data = $getterUtil.getLong($publicationPublishDate.getData()))
+
+####Set title, subtitle notes
+
+#set ($titleNoteRef = "")
+#set ($titleNoteText = "")
+#set ($subtitleNoteRef = "")
+#set ($subtitleNoteText = "")
+
+##first check if they exist
+#if($publicationTitleNote.getData() && $publicationSubtitleNote.getData())
+
+##then check if they're empty
+######for articles that include both
+#if($publicationTitleNote.getData()!="" && $publicationSubtitleNote.getData()!="")##
+    #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
+    #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
+    #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">2</a></sup>')
+    #set ($subtitleNoteText = '<p class="Basic-Paragraph"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">2</a> </span>' + $publicationSubtitleNote.getData() + '</p>')
+#end
+
+
+
+######for articles that only include title note
+
+#if($publicationTitleNote.getData()!="" && $publicationSubtitleNote.getData()=="")##
+    #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
+    #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
+
+    #set ($subtitleNoteRef = '')
+    #set ($subtitleNoteText = '')
+#end
+
+
+
+
+######for articles that only include subtitle note
+#if($publicationTitleNote.getData()=="" && $publicationSubtitleNote.getData()!="")##
+    #set ($titleNoteRef = '')
+    #set ($titleNoteText = '')
+    #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">1</a></sup>')
+    #set ($subtitleNoteText = '<p class="Basic-Paragraph"><span id="endnote-subtitle-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-subtitle-note-backlink">1</a> </span>' + $publicationSubtitleNote.getData() + '</p>')
+#end
+
+
+
+#end
+
+
+
+
+
+
+
+<article>
+<header>
+##NOTE: condition $publicationTitleNote.getData() works on the tjaglcs public instance of Liferay
+##but not locally. $publicationTitleNote.getData()!="" works locally, but not online.
+##Using both.
+<h1 class="article--title">$reserved-article-title.getData()##
+$titleNoteRef##
+#if ($publicationSubtitle.getData() && $publicationSubtitle.getData()!="")##
+: </br>$publicationSubtitle.getData()##
+<sup>$subtitleNoteRef##
+#end
+
+
+</h1>
+
+#if($publicationVolume.getData()!="null" || $publicationIssue.getData()!="null")
+<p class="article--volume-info">Volume $publicationVolume.getData()
+Issue $publicationIssue.getData()
+
+#if ($publicationPublishDate_Data > 0)
+	#set ($publicationPublishDate_DateObj = $dateUtil.newDate($publicationPublishDate_Data))
+	$dateUtil.getDate($publicationPublishDate_DateObj, "yyyy", $locale)
+#end
+#end
+
+</p>
+#if (!$publicationAuthors.getSiblings().isEmpty())
+<p class="article--byline">
+    #set ($separator = ",")
+
+##NOTE: any white space here may wind up in the output, which is why it's not indented below
+#foreach ($cur_publicationAuthors in $publicationAuthors.getSiblings())
+$cur_publicationAuthors.getData()##
+#if($publicationAuthors.getSiblings().size()>=3 && $velocityCount!=$publicationAuthors.getSiblings().size())$separator##
+#end##
+#if($cur_publicationAuthors.getChild('publicationAuthorBio').getData() && $cur_publicationAuthors.getChild('publicationAuthorBio').getData()!="")##
+<span id="article-author-$velocityCount"><sup><a href="#article-author-bio-$velocityCount">[*]</a></sup></span>##
+#end##
+#if ($publicationAuthors.getSiblings().size()>1 && $velocityCount==$publicationAuthors.getSiblings().size() - 1)##
+ and ##
+#end##
+
+	#end
+</p>#end
+</header>
+
+<div class="article--body">$publicationContent.getData()</div>
+
+<footer class="article--footer">
+<hr/>
+#foreach ($cur_publicationAuthors in $publicationAuthors.getSiblings())
+    #if($cur_publicationAuthors.getChild('publicationAuthorBio').getData() && $cur_publicationAuthors.getChild('publicationAuthorBio').getData()!="")
+
+    <p id="article-author-bio-$velocityCount">
+        <sup><a href="#article-author-$velocityCount">[*]</a></sup>$cur_publicationAuthors.getChild('publicationAuthorBio').getData()
+    </p>
+    #end
+#end
+
+
+####Insert title notes
+$titleNoteText
+$subtitleNoteText
+
+
+
+
+<div>
+
+#if ($publicationEndNotes.getData() && $publicationEndNotes.getData()!="")
+	$publicationEndNotes.getData()
+#end
+
+
+</div>
+
+</footer>
+
+</article>

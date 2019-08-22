@@ -6,6 +6,37 @@
 ## Autocomplete is also available and can be invoked by typing "$".
 ##
 
+
+
+####VARIABLES
+######Publication Year
+#set ($publicationPublishDate_Data = $getterUtil.getString($publicationPublishDate.getData()))
+
+#if ($validator.isNotNull($publicationPublishDate_Data))
+	#set ($publicationPublishDate_DateObj = $dateUtil.parseDate("yyyy-MM-dd",$publicationPublishDate_Data, $locale))
+
+	#set($year = $dateUtil.getDate($publicationPublishDate_DateObj, "yyyy", $locale))
+
+#end
+
+######Volume
+
+#set($volumeString = "")
+#if ($validator.isNotNull($publicationVolume.getData()))
+    #set($volumeString = "Volume " + $publicationVolume.getData())
+#end
+
+######Issue
+#set($issueString = "")
+#if ($validator.isNotNull($publicationIssue.getData()))
+    #set($issueString = "Issue " + $publicationIssue.getData() )
+#end
+
+
+
+
+####END VARIABLES
+
 <style>
 .journal-content-article .article--title {
 	color:#000666;
@@ -140,17 +171,8 @@ $titleNoteRef##
 
 </h1>
 
-#if($publicationVolume.getData()!="null" || $publicationIssue.getData()!="null")
-<p class="article--volume-info">Volume $publicationVolume.getData()
-Issue $publicationIssue.getData()
+<p class="article--volume-info">$volumeString $issueString $year</p>
 
-#if ($publicationPublishDate_Data > 0)
-	#set ($publicationPublishDate_DateObj = $dateUtil.newDate($publicationPublishDate_Data))
-	$dateUtil.getDate($publicationPublishDate_DateObj, "yyyy", $locale)
-#end
-#end
-
-</p>
 #if (!$publicationAuthors.getSiblings().isEmpty())
 <p class="article--byline">
     #set ($separator = ",")

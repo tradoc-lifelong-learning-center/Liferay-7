@@ -105,8 +105,9 @@
 
     #set ($authorString = "")
 
-	#foreach ($cur_publicationAuthors in $publicationAuthors.getSiblings())     ##Add author name to string
-		#set($authorString = $authorString + " " + $cur_publicationAuthors.getData())
+	#foreach ($cur_publicationAuthors in $publicationAuthors.getSiblings())
+	##Add author name to string
+		#set($authorString = $authorString + "<span id='article-author-" + $velocityCount + "'>" + $cur_publicationAuthors.getData())
 
 		##If there are more than 3 authors, add the separator
 		#if($publicationAuthors.getSiblings().size()>=3 && $velocityCount!=$publicationAuthors.getSiblings().size())
@@ -116,7 +117,7 @@
         ##If there's an author bio, link to it
         #if($validator.isNotNull($cur_publicationAuthors.AuthorBioNote.getData()))
 
-            #set($authorString = $authorString + "<span id='article-author-" + $velocityCount + "'><sup><a href='#article-author-bio-" + $velocityCount + "'>[" + $bioNotRef + "]</a></sup></span>")
+            #set($authorString = $authorString + "<sup><a href='#article-author-bio-" + $velocityCount + "'>[" + $bioNotRef + "]</a></sup></span>")
         #set ($bioNotRef = $bioNotRef + $bioNotRefCharacter)
         #end
 

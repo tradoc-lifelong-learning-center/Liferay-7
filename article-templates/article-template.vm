@@ -136,7 +136,7 @@
 
         #if ($validator.isNotNull($cur_publicationAuthors.AuthorBioNote.getData()))
 
-            #set ($authorNotesString = $authorNotesString + "<p id='article-author-bio-" + $velocityCount + "'><sup><a href='#article-author-" + $velocityCount + "'>[" + $bioNotRef + "]</a></sup>" + $cur_publicationAuthors.AuthorBioNote.getData() + "</p>")
+            #set ($authorNotesString = $authorNotesString + "<p id='article-author-bio-" + $velocityCount + "'><sup><a href='#article-author-" + $velocityCount + "'>[" + $bioNotRef + "]</a></sup> " + $cur_publicationAuthors.AuthorBioNote.getData() + "</p>")
 
             #set($bioNotRef = $bioNotRef + $bioNotRefCharacter)
 

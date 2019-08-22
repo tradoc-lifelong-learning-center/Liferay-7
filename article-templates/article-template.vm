@@ -13,7 +13,7 @@
 ######Title Notes
 #set ($publicationPublishDate_Data = $getterUtil.getLong($publicationPublishDate.getData()))
 
-####Set title, subtitle notes
+########Set title, subtitle notes
 
 #set ($titleNoteRef = "")
 #set ($titleNoteText = "")
@@ -21,11 +21,12 @@
 #set ($subtitleNoteText = "")
 
 ##first check if they exist
-#if($publicationTitleNote.getData() && $publicationSubtitleNote.getData())
+
+##if($validator.isNotNull($publicationTitleNote.getData()) && $validator.isNotNull($publicationSubtitleNote.getData()))
 
 ##then check if they're empty
 ######for articles that include both
-#if($publicationTitleNote.getData()!="" && $publicationSubtitleNote.getData()!="")##
+#if($validator.isNotNull($publicationTitleNote.getData()) && $validator.isNotNull($publicationSubtitleNote.getData()))##
     #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
     #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
     #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">2</a></sup>')
@@ -35,8 +36,7 @@
 
 
 ######for articles that only include title note
-
-#if($publicationTitleNote.getData()!="" && $publicationSubtitleNote.getData()=="")##
+#if($validator.isNotNull($publicationTitleNote.getData()) && $validator.isNull($publicationSubtitleNote.getData()))##
     #set ($titleNoteRef = '<sup><a id="endnote-title-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-title-note">1</a></sup>')
     #set ($titleNoteText = '<p class="Basic-Paragraph"><span id="endnote-title-note"><a class="_idEndnoteAnchor _idGenColorInherit" href="#endnote-title-note-backlink">1</a> </span>' + $publicationTitleNote.getData() + '</p>')
 
@@ -48,7 +48,7 @@
 
 
 ######for articles that only include subtitle note
-#if($publicationTitleNote.getData()=="" && $publicationSubtitleNote.getData()!="")##
+#if($validator.isNull($publicationTitleNote.getData()) && $validator.isNotNull($publicationSubtitleNote.getData()))##
     #set ($titleNoteRef = '')
     #set ($titleNoteText = '')
     #set ($subtitleNoteRef = '<sup><a id="endnote-subtitle-note-backlink" class="_idEndnoteLink _idGenColorInherit" href="#endnote-subtitle-note">1</a></sup>')
@@ -57,7 +57,7 @@
 
 
 
-#end
+##end
 
 
 

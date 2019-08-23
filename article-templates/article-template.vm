@@ -115,7 +115,7 @@
         #end
 
         ##If there's an author bio, link to it
-        #if($validator.isNotNull($cur_publicationAuthors.AuthorBioNote.getData()))
+        #if($validator.isNotNull($cur_publicationAuthors.publicationAuthorBio.getData()))
 
             #set($authorString = $authorString + "<sup><a href='#article-author-bio-" + $velocityCount + "'>[" + $bioNotRef + "]</a></sup></span>")
         #set ($bioNotRef = $bioNotRef + $bioNotRefCharacter)
@@ -135,9 +135,9 @@
 
     #foreach ($cur_publicationAuthors in $publicationAuthors.getSiblings())
 
-        #if ($validator.isNotNull($cur_publicationAuthors.AuthorBioNote.getData()))
+        #if ($validator.isNotNull($cur_publicationAuthors.publicationAuthorBio.getData()))
 
-            #set ($authorNotesString = $authorNotesString + "<p class='article-author-bio' id='article-author-bio-" + $velocityCount + "'><sup><a href='#article-author-" + $velocityCount + "'>[" + $bioNotRef + "]</a></sup> " + $cur_publicationAuthors.AuthorBioNote.getData() + "</p>")
+            #set ($authorNotesString = $authorNotesString + "<p class='article-author-bio' id='article-author-bio-" + $velocityCount + "'><sup><a href='#article-author-" + $velocityCount + "'>[" + $bioNotRef + "]</a></sup> " + $cur_publicationAuthors.publicationAuthorBio.getData() + "</p>")
 
             #set($bioNotRef = $bioNotRef + $bioNotRefCharacter)
 

@@ -42,7 +42,7 @@
             },
             "dataType": "html",
             "fieldNamespace": "ddm",
-            "indexType": "keyword",
+            "indexType": "text",
             "localizable": true,
             "name": "publicationTitleNote",
             "readOnly": false,
@@ -53,7 +53,31 @@
         },
         {
             "label": {
-                "en_US": "Publication Name"
+                "en_US": "Subtitle Note"
+            },
+            "predefinedValue": {
+                "en_US": ""
+            },
+            "style": {
+                "en_US": ""
+            },
+            "tip": {
+                "en_US": "If present, a subtitle note will appear as end note number 1 and will be called out at the end of the article title. If a title note exists, the subtitle note will be called out as note 2."
+            },
+            "dataType": "html",
+            "fieldNamespace": "ddm",
+            "indexType": "text",
+            "localizable": false,
+            "name": "publicationSubtitleNote",
+            "readOnly": false,
+            "repeatable": false,
+            "required": false,
+            "showLabel": true,
+            "type": "ddm-text-html"
+        },
+        {
+            "label": {
+                "en_US": "Publication"
             },
             "options": [
                 {
@@ -70,9 +94,7 @@
                 }
             ],
             "predefinedValue": {
-                "en_US": [
-                    ""
-                ]
+                "en_US": []
             },
             "style": {
                 "en_US": ""
@@ -116,7 +138,7 @@
             "nestedFields": [
                 {
                     "label": {
-                        "en_US": "Author Bio"
+                        "en_US": "Author Bio/Note"
                     },
                     "predefinedValue": {
                         "en_US": ""
@@ -128,8 +150,8 @@
                         "en_US": ""
                     },
                     "dataType": "string",
-                    "indexType": "keyword",
-                    "localizable": false,
+                    "indexType": "text",
+                    "localizable": true,
                     "name": "publicationAuthorBio",
                     "readOnly": false,
                     "repeatable": false,
@@ -178,7 +200,7 @@
             },
             "dataType": "string",
             "indexType": "keyword",
-            "localizable": false,
+            "localizable": true,
             "name": "publicationVolumeName",
             "readOnly": false,
             "repeatable": false,
@@ -225,7 +247,7 @@
             },
             "dataType": "string",
             "indexType": "keyword",
-            "localizable": false,
+            "localizable": true,
             "name": "publicationIssueName",
             "readOnly": false,
             "repeatable": false,
@@ -273,11 +295,11 @@
             "dataType": "html",
             "fieldNamespace": "ddm",
             "indexType": "text",
-            "localizable": false,
+            "localizable": true,
             "name": "publicationContent",
             "readOnly": false,
             "repeatable": false,
-            "required": false,
+            "required": true,
             "showLabel": true,
             "type": "ddm-text-html"
         },
@@ -296,7 +318,7 @@
             },
             "dataType": "html",
             "fieldNamespace": "ddm",
-            "indexType": "keyword",
+            "indexType": "text",
             "localizable": true,
             "name": "publicationEndNotes",
             "readOnly": false,

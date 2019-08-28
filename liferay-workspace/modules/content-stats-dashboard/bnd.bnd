@@ -1,0 +1,4 @@
+Bundle-Name: content-stats-dashboard
+Bundle-SymbolicName: mil.tjaglcs.contentdashboard
+Bundle-Version: 1.0.0
+Export-Package: mil.tjaglcs.contentdashboard.constants

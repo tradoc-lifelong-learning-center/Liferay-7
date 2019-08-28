@@ -1,5 +1,7 @@
 package mil.tjaglcs.contentdashboard.portlet;
 
+import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
@@ -103,7 +105,7 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 		
 		//Query stringQuery = new StringQuery("(publicationName: pubName AND (status:0) AND ((entryClassName:com.liferay.portlet.journal.model.JournalArticle AND head:true) OR entryClassName:com.liferay.portlet.documentlibrary.model.DLFileEntry)");
 		//Query stringQuery = new StringQuery("(entryClassName=com.liferay.portlet.journal.model.JournalArticle AND head=true) OR entryClassName=com.liferay.document.library.kernel.model.DLFileEntry");
-		Query stringQuery = new StringQuery("(status:0) AND (entryClassName: com.liferay.journal.model.JournalArticle AND head: true) OR entryClassName: com.liferay.document.library.kernel.model.DLFileEntry");
+		Query stringQuery = new StringQuery("(status:0 AND entryClassName: com.liferay.journal.model.JournalArticle AND head: true) OR entryClassName: com.liferay.document.library.kernel.model.DLFileEntry");
 		//Query stringQuery = new StringQuery("findthisarticle PDF");
 		
 		BooleanQuery searchQuery = new BooleanQueryImpl();
@@ -129,6 +131,11 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 			
 			String title = "";
 			
+			long articleId = 0;
+			String createDate = "";
+			String modifiedDate = "";
+			String type = "";
+			
 			if(currentDoc.getField(Field.TITLE) != null) {
 				//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
 				title = currentDoc.getField(Field.TITLE).getValue();
@@ -138,15 +145,36 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 				System.out.println("title (local): " + title);
 			} 
 			
-			//entries.add(title);
-			
 			if(currentDoc.getField(Field.ENTRY_CLASS_NAME) != null) {
 				//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
 				//String title = currentDoc.getField(Field.TITLE).getValue();
 				System.out.println("ENTRY_CLASS_NAME: " + currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue());
+				type = currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue();
 			}
 			
-			Article article = new Article(title);
+			//entries.add(title);
+			
+			if(type.contains("JournalArticle")) {
+				if(currentDoc.getField(Field.ARTICLE_ID) != null) {
+					//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
+					//String title = currentDoc.getField(Field.TITLE).getValue();
+					System.out.println("ARTICLE_ID: " + currentDoc.getField(Field.ARTICLE_ID).getValue());
+					articleId = Long.parseLong(currentDoc.getField(Field.ARTICLE_ID).getValue());
+				}
+			} else if(type.contains("DLFileEntry")) {
+				long groupId = Long.parseLong(currentDoc.getField("groupId").getValue());						
+				long folderId = Long.parseLong(currentDoc.getField("folderId").getValue());
+				String docTitle = currentDoc.getField("title").getValue();
+				
+				DLFileEntry entry = DLFileEntryLocalServiceUtil.fetchFileEntry(groupId, folderId, docTitle);
+			
+                articleId = entry.getFileEntryId();
+			}
+			
+			
+			
+			
+			Article article = new Article(title, articleId, createDate, modifiedDate, type);
 			
 			this.articles.addArticle(article);
 		}

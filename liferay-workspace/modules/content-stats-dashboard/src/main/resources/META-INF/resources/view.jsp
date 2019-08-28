@@ -13,6 +13,6 @@
 
 <c:forEach items="${articles }" var = "article" varStatus="i">
 
-	<p><c:out value="${article.getTitle() }"/></p>
+	<p><c:out value="${article.getTitle() }"/>, <c:out value="${article.getArticleId() }"/></p>
 </c:forEach> 
 

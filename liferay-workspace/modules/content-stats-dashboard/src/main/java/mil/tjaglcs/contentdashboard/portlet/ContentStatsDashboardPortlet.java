@@ -20,8 +20,13 @@ import com.liferay.portal.kernel.search.generic.StringQuery;
 import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
@@ -103,10 +108,11 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 		
 		System.out.println("searchContext: " + searchContext);
 		
-		//Query stringQuery = new StringQuery("(publicationName: pubName AND (status:0) AND ((entryClassName:com.liferay.portlet.journal.model.JournalArticle AND head:true) OR entryClassName:com.liferay.portlet.documentlibrary.model.DLFileEntry)");
-		//Query stringQuery = new StringQuery("(entryClassName=com.liferay.portlet.journal.model.JournalArticle AND head=true) OR entryClassName=com.liferay.document.library.kernel.model.DLFileEntry");
-		Query stringQuery = new StringQuery("(status:0 AND entryClassName: com.liferay.journal.model.JournalArticle AND head: true) OR entryClassName: com.liferay.document.library.kernel.model.DLFileEntry");
-		//Query stringQuery = new StringQuery("findthisarticle PDF");
+
+		//Query stringQuery = new StringQuery("(status:0 AND entryClassName: com.liferay.journal.model.JournalArticle AND head: true) OR entryClassName: com.liferay.document.library.kernel.model.DLFileEntry");
+		//On current LR7.2 setups, documents aren't working. Just finding journals for now.
+		Query stringQuery = new StringQuery("(status:0 AND entryClassName: com.liferay.journal.model.JournalArticle AND head: true)");
+
 		
 		BooleanQuery searchQuery = new BooleanQueryImpl();
 		
@@ -146,22 +152,38 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 			} 
 			
 			if(currentDoc.getField(Field.ENTRY_CLASS_NAME) != null) {
-				//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
-				//String title = currentDoc.getField(Field.TITLE).getValue();
-				System.out.println("ENTRY_CLASS_NAME: " + currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue());
-				type = currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue();
+				String typeString = currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue();
+				//System.out.println("ENTRY_CLASS_NAME: " + currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue());
+				
+				if(typeString.contains("JournalArticle")) {
+					type = "Web Content Article";
+				} else if(typeString.contains("DLFileEntry")){
+					type = "Document";
+				} else {
+					type="undefined";
+				}
+				
+				//type = currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue();
 			}
 			
-			//entries.add(title);
+			if(currentDoc.getField(Field.CREATE_DATE) != null) {
+				System.out.println("CREATE_DATE: " + currentDoc.getField(Field.CREATE_DATE).getValue());
+				createDate = formatDate(currentDoc.getField(Field.CREATE_DATE).getValue());
+			}
 			
-			if(type.contains("JournalArticle")) {
+			if(currentDoc.getField(Field.MODIFIED_DATE) != null) {
+				System.out.println("MODIFIED_DATE: " + currentDoc.getField(Field.MODIFIED_DATE).getValue());
+				modifiedDate = formatDate(currentDoc.getField(Field.MODIFIED_DATE).getValue());
+			}
+			
+			if(type.contains("Web Content Article")) {
 				if(currentDoc.getField(Field.ARTICLE_ID) != null) {
 					//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
 					//String title = currentDoc.getField(Field.TITLE).getValue();
 					System.out.println("ARTICLE_ID: " + currentDoc.getField(Field.ARTICLE_ID).getValue());
 					articleId = Long.parseLong(currentDoc.getField(Field.ARTICLE_ID).getValue());
 				}
-			} else if(type.contains("DLFileEntry")) {
+			} else if(type.contains("Document")) {
 				long groupId = Long.parseLong(currentDoc.getField("groupId").getValue());						
 				long folderId = Long.parseLong(currentDoc.getField("folderId").getValue());
 				String docTitle = currentDoc.getField("title").getValue();
@@ -179,7 +201,18 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 			this.articles.addArticle(article);
 		}
 		
-		//return entries;
+
+	}
+	
+	public String formatDate(String inputDateString) {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss", Locale.US);
+		LocalDate date1 = LocalDate.parse(inputDateString, formatter);
+		
+		System.out.println(date1.toString());
+		
+		//2019-08-27-1213-57
+		return date1.toString();
 	}
 	
 	public String test() {

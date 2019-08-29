@@ -31,7 +31,7 @@ public class Article {
 		return modifiedDate;
 	}
 	
-	public String type() {
+	public String getType() {
 		return type;
 	}
 	

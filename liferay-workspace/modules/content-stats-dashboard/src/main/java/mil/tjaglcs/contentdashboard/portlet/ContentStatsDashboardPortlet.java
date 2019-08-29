@@ -106,7 +106,7 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 		HttpServletRequest httpRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(request));
 		SearchContext searchContext = SearchContextFactory.getInstance(httpRequest);
 		
-		System.out.println("searchContext: " + searchContext);
+		//System.out.println("searchContext: " + searchContext);
 		
 
 		//Query stringQuery = new StringQuery("(status:0 AND entryClassName: com.liferay.journal.model.JournalArticle AND head: true) OR entryClassName: com.liferay.document.library.kernel.model.DLFileEntry");
@@ -116,22 +116,22 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 		
 		BooleanQuery searchQuery = new BooleanQueryImpl();
 		
-		System.out.println("searchQuery: " + searchQuery);
+		//System.out.println("searchQuery: " + searchQuery);
 		
 		searchQuery.add(stringQuery,BooleanClauseOccur.MUST);
 		
-		System.out.println("searchQuery: " + searchQuery);
+		//System.out.println("searchQuery: " + searchQuery);
 
 		Hits hits = IndexSearcherHelperUtil.search(searchContext,searchQuery);
 		
-		System.out.println("hits: " + hits.getLength());
+		//System.out.println("hits: " + hits.getLength());
 		
 		List<Document> hitsDocs = hits.toList();
 		
 		for(int i = 0; i<hitsDocs.size(); i++) {
 			Document currentDoc = hitsDocs.get(i);
 			
-			System.out.println("working on doc " + i);
+			//System.out.println("working on doc " + i);
 			//System.out.println("doc: " + currentDoc);
 			//System.out.println("fields: " + currentDoc.getFields());
 			
@@ -142,55 +142,73 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 			String modifiedDate = "";
 			String type = "";
 			
-			if(currentDoc.getField(Field.TITLE) != null) {
-				//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
-				title = currentDoc.getField(Field.TITLE).getValue();
-				System.out.println("title: " + title);
-			} else if(currentDoc.get("title_en_US") != null) {
-				title = currentDoc.get("title_en_US");
-				System.out.println("title (local): " + title);
+			try {
+				if(currentDoc.getField(Field.TITLE) != null) {
+					//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
+					title = currentDoc.getField(Field.TITLE).getValue();
+					//System.out.println("title: " + title);
+				} else if(currentDoc.get("title_en_US") != null) {
+					title = currentDoc.get("title_en_US");
+					//System.out.println("title (local): " + title);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} 
 			
-			if(currentDoc.getField(Field.ENTRY_CLASS_NAME) != null) {
-				String typeString = currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue();
-				//System.out.println("ENTRY_CLASS_NAME: " + currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue());
-				
-				if(typeString.contains("JournalArticle")) {
-					type = "Web Content Article";
-				} else if(typeString.contains("DLFileEntry")){
-					type = "Document";
-				} else {
-					type="undefined";
+			try {
+				if(currentDoc.getField(Field.ENTRY_CLASS_NAME) != null) {
+					String typeString = currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue();
+					//System.out.println("ENTRY_CLASS_NAME: " + currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue());
+					
+					if(typeString.contains("JournalArticle")) {
+						type = "Web Content Article";
+					} else if(typeString.contains("DLFileEntry")){
+						type = "Document";
+					} else {
+						type="undefined";
+					}
+					
+					//type = currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue();
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			try {
+				if(currentDoc.getField(Field.CREATE_DATE) != null) {
+					//System.out.println("CREATE_DATE: " + currentDoc.getField(Field.CREATE_DATE).getValue());
+					createDate = formatDate(currentDoc.getField(Field.CREATE_DATE).getValue());
 				}
 				
-				//type = currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue();
-			}
-			
-			if(currentDoc.getField(Field.CREATE_DATE) != null) {
-				System.out.println("CREATE_DATE: " + currentDoc.getField(Field.CREATE_DATE).getValue());
-				createDate = formatDate(currentDoc.getField(Field.CREATE_DATE).getValue());
-			}
-			
-			if(currentDoc.getField(Field.MODIFIED_DATE) != null) {
-				System.out.println("MODIFIED_DATE: " + currentDoc.getField(Field.MODIFIED_DATE).getValue());
-				modifiedDate = formatDate(currentDoc.getField(Field.MODIFIED_DATE).getValue());
-			}
-			
-			if(type.contains("Web Content Article")) {
-				if(currentDoc.getField(Field.ARTICLE_ID) != null) {
-					//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
-					//String title = currentDoc.getField(Field.TITLE).getValue();
-					System.out.println("ARTICLE_ID: " + currentDoc.getField(Field.ARTICLE_ID).getValue());
-					articleId = Long.parseLong(currentDoc.getField(Field.ARTICLE_ID).getValue());
+				if(currentDoc.getField(Field.MODIFIED_DATE) != null) {
+					//System.out.println("MODIFIED_DATE: " + currentDoc.getField(Field.MODIFIED_DATE).getValue());
+					modifiedDate = formatDate(currentDoc.getField(Field.MODIFIED_DATE).getValue());
 				}
-			} else if(type.contains("Document")) {
-				long groupId = Long.parseLong(currentDoc.getField("groupId").getValue());						
-				long folderId = Long.parseLong(currentDoc.getField("folderId").getValue());
-				String docTitle = currentDoc.getField("title").getValue();
-				
-				DLFileEntry entry = DLFileEntryLocalServiceUtil.fetchFileEntry(groupId, folderId, docTitle);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-                articleId = entry.getFileEntryId();
+			try {
+				if(type.contains("Web Content Article")) {
+					if(currentDoc.getField(Field.ARTICLE_ID) != null) {
+						//System.out.println("ARTICLE_ID: " + currentDoc.getField(Field.ARTICLE_ID).getValue());
+						articleId = Long.parseLong(currentDoc.getField(Field.ARTICLE_ID).getValue());
+					}
+				} else if(type.contains("Document")) {
+					long groupId = Long.parseLong(currentDoc.getField("groupId").getValue());						
+					long folderId = Long.parseLong(currentDoc.getField("folderId").getValue());
+					String docTitle = currentDoc.getField("title").getValue();
+					
+					DLFileEntry entry = DLFileEntryLocalServiceUtil.fetchFileEntry(groupId, folderId, docTitle);
+				
+				    articleId = entry.getFileEntryId();
+				}
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 			
@@ -209,9 +227,8 @@ public class ContentStatsDashboardPortlet extends MVCPortlet {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss", Locale.US);
 		LocalDate date1 = LocalDate.parse(inputDateString, formatter);
 		
-		System.out.println(date1.toString());
-		
-		//2019-08-27-1213-57
+		//System.out.println(date1.toString());
+
 		return date1.toString();
 	}
 	

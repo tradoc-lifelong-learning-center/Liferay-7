@@ -1,4 +1,6 @@
 .gradle/
 .sass-cache/
-build/
+build/classes
+build/resources
+build/tmp
 target/

@@ -33,6 +33,15 @@ import mil.tjaglcs.mlrselector.constants.MlrSelectorPortletKeys;
 )
 public class MlrSelectorPortlet extends MVCPortlet {
 	
+	public Publication fetchPublication(RenderRequest request) throws Exception {
+		
+		PortletPreferences portletPreferences = request.getPreferences();
+		String pubName = GetterUtil.getString(portletPreferences.getValue("publicationName", ""));
+		
+		Publication pub = new Publication(pubName, request);
+		
+		return pub;
+	}
 	
 	
 }

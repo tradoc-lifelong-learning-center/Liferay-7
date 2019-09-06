@@ -1,17 +1,21 @@
 package mil.tjaglcs.mlrselector.portlet;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.util.GetterUtil;
 
 import java.io.IOException;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
 
 import mil.tjaglcs.mlrselector.constants.MlrSelectorPortletKeys;
+import mil.tjaglcs.mlrselector.model.Publication;
 
 /**
  * @author Jag
@@ -33,10 +37,38 @@ import mil.tjaglcs.mlrselector.constants.MlrSelectorPortletKeys;
 )
 public class MlrSelectorPortlet extends MVCPortlet {
 	
+	private Publication publication;
+	
+	
+	@Override
+	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
+	    throws PortletException, IOException {
+		
+		try {
+			this.publication = fetchPublication(renderRequest);
+			System.out.println(this.publication);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("caught!");
+			e.printStackTrace();
+		}
+
+		
+		
+		renderRequest.setAttribute("publication", this.publication);
+
+		//System.out.println("super: render");
+	    super.render(renderRequest, renderResponse);
+	}
+	
 	public Publication fetchPublication(RenderRequest request) throws Exception {
+		//System.out.println("trying to get pub");
 		
 		PortletPreferences portletPreferences = request.getPreferences();
-		String pubName = GetterUtil.getString(portletPreferences.getValue("publicationName", ""));
+		
+		//TODO: reenable
+		//String pubName = GetterUtil.getString(portletPreferences.getValue("publicationName", ""));
+		String pubName = "Military Law Review";
 		
 		Publication pub = new Publication(pubName, request);
 		

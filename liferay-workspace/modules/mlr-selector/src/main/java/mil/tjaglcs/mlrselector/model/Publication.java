@@ -1,23 +1,22 @@
 package mil.tjaglcs.mlrselector.model;
 
 
+import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.IndexSearcherHelperUtil;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchContextFactory;
-import com.liferay.portal.kernel.search.SearchEngineUtil;
-import com.liferay.portal.kernel.search.StringQueryFactoryUtil;
+import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
+import com.liferay.portal.kernel.search.generic.StringQuery;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.documentlibrary.model.DLFileEntry;
-import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
-import com.tjaglcs.search.CustomField;
+import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -33,6 +32,8 @@ import java.util.stream.Collectors;
 import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.servlet.http.HttpServletRequest;
+
+import mil.tjaglcs.mlrselector.search.CustomField;
 
 public class Publication {
 	private String name;
@@ -53,12 +54,20 @@ public class Publication {
 	public Publication(String name, RenderRequest request) throws Exception {
 		this.request = request;
 		this.name = name;
+		
+		System.out.println("name: " + name);
+		
 		setArticles(name, request);
+		
+		System.out.println("articles: " + articles);
 		
 		//filter volumes by type: if there's both an article and PDF, only show article
 		filterArticlePDFs();
 		
 		setVolumes();
+		
+		System.out.println("volumes: " + this.volumes);
+		
 		groupVolumesByYear();
 
 		setMostRecentVolumesByYear();
@@ -494,6 +503,8 @@ public class Publication {
 		if(this.isSingleIssue && (this.selectedVolumes.size()==1)) {
 			Volume vol = this.selectedVolumes.get(0);
 			
+			System.out.println("volume: " + vol);
+			
 			if(issueString!=null) {
 				vol.setSelectedIssue(Integer.parseInt(issueString));
 			} else {
@@ -644,24 +655,41 @@ public class Publication {
 			HttpServletRequest httpRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(request));
 			SearchContext searchContext = SearchContextFactory.getInstance(httpRequest);
 
-			BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(searchContext);
+			//BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(searchContext);
 			
-			Query stringQuery = StringQueryFactoryUtil.create("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.portlet.journal.model.JournalArticle AND head:true) OR entryClassName:com.liferay.portlet.documentlibrary.model.DLFileEntry)");
+			//Query stringQuery = StringQueryFactoryUtil.create("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.portlet.journal.model.JournalArticle AND head:true) OR entryClassName:com.liferay.portlet.documentlibrary.model.DLFileEntry)");
+			
+			
+			
+			//Query stringQuery = new StringQuery("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.portlet.journal.model.JournalArticle AND head:true) OR entryClassName:com.liferay.portlet.documentlibrary.model.DLFileEntry)");
+			Query stringQuery = new StringQuery("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
+			//Query stringQuery = new StringQuery("automatism");
+
+			
+			BooleanQuery searchQuery = new BooleanQueryImpl();
+			
+			
 			
 			searchQuery.add(stringQuery,BooleanClauseOccur.MUST);
 			
-			Hits hits = SearchEngineUtil.search(searchContext,searchQuery);
+			//Hits hits = SearchEngineUtil.search(searchContext,searchQuery);
+			
+			Hits hits = IndexSearcherHelperUtil.search(searchContext,searchQuery);
+			
+			System.out.println("hits: " + hits.getLength());
 			
 			List<Document> hitsDocs = hits.toList();
 			
 			List<Article> articles = new ArrayList<>();
 			
-			//System.out.println("Total hits: " + hits.getLength());
+			//System.out.println("hitsDocs: " + hitsDocs);
+			System.out.println("hitsDocs.size(): " + hitsDocs.size());
+			
+			System.out.println("hitsDocs.size(): " + hitsDocs.get(0).getField(Field.TITLE).getValue());
 			
 			for(int i = 0; i<hitsDocs.size(); i++) {
-			
-				Document currentDoc = hitsDocs.get(i);
 				
+				Document currentDoc = hitsDocs.get(i);
 				
 				String title = "Title not found";
 				long articleId = -1;
@@ -676,15 +704,16 @@ public class Publication {
 				String authors = "";
 				String pdfType = "";
 				
-				
 				try {
 					if(currentDoc.getField(Field.TITLE) != null) {
-						//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
+						System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
 						title = currentDoc.getField(Field.TITLE).getValue();
+						
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("title error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try {
@@ -693,8 +722,9 @@ public class Publication {
 						title = title + ": " + currentDoc.getField(CustomField.PUBLICATION_SUBTITLE).getValue();
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("subtitle error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try {
@@ -703,8 +733,9 @@ public class Publication {
 						version = Double.parseDouble(currentDoc.getField(CustomField.VERSION).getValue());
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("version error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try {
@@ -713,8 +744,9 @@ public class Publication {
 						volume = Integer.parseInt(currentDoc.getField(CustomField.PUBLICATION_VOLUME).getValue());
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("volume error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try {
@@ -723,8 +755,9 @@ public class Publication {
 						volumeName = currentDoc.getField(CustomField.PUBLICATION_VOLUME_NAME).getValue();
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("volume name error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try {
@@ -733,8 +766,9 @@ public class Publication {
 						issue = Integer.parseInt(currentDoc.getField(CustomField.PUBLICATION_ISSUE).getValue());
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("issue error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try {
@@ -743,8 +777,9 @@ public class Publication {
 						issueName = currentDoc.getField(CustomField.PUBLICATION_ISSUE_NAME).getValue();
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("issue name error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try { //does this really need to be custom field?
@@ -753,8 +788,9 @@ public class Publication {
 						type = currentDoc.getField(CustomField.ENTRY_CLASS_NAME).getValue();
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("class name error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try {
@@ -765,8 +801,9 @@ public class Publication {
 						articleDate = parseDate(fieldValue);
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("pub date error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try {
@@ -774,8 +811,9 @@ public class Publication {
 						status = Integer.parseInt(currentDoc.getField(Field.STATUS).getValue());
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("status error");
+					e1.printStackTrace();
+					
 				} 
 				
 				try {
@@ -786,8 +824,9 @@ public class Publication {
 
 					} 
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					System.out.println("author error");
+					e1.printStackTrace();
+					
 				} 
 
 				try {
@@ -846,10 +885,12 @@ public class Publication {
 					articles.add(article);
 					
 				} catch(Exception e) {
+					System.out.println("Couldn't create article object");
 					e.printStackTrace();
 				}
 			}
 			
+			System.out.println("made it!");
 			this.articles = articles;
 		}
 	

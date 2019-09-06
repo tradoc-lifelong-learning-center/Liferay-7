@@ -1,12 +1,8 @@
 package mil.tjaglcs.mlrselector.search;
 
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.portlet.PortletURL;
-
+import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.journal.model.JournalArticle;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -18,11 +14,13 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.documentlibrary.model.DLFileEntry;
-import com.liferay.portlet.dynamicdatamapping.storage.Fields;
-import com.tjaglcs.search.CustomField;
-import com.tjaglcs.search.FieldToIndex;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.portlet.PortletURL;
+
 
 public class SearchIndexPostProcessor extends BaseIndexerPostProcessor {
 	public void postProcessContextQuery(BooleanQuery booleanQuery, SearchContext searchcontext)
@@ -41,7 +39,7 @@ public class SearchIndexPostProcessor extends BaseIndexerPostProcessor {
 		String journalClassName = "JournalArticleImpl";
 		
 		if(objectClass.contains(journalClassName)) {
-			//System.out.println("class name: " + objectClass);
+			System.out.println("class name: " + objectClass);
 			//System.out.println("Journal!");
 			objectClass = journalClassName;
 
@@ -75,13 +73,19 @@ public class SearchIndexPostProcessor extends BaseIndexerPostProcessor {
 			
 			String fieldVal;
 
-			if(className == "DLFileEntryImpl") {
+			
+			//temporarily disable documents
+			/*if(className == "DLFileEntryImpl") {
 				fieldVal = getDLFileMeta(object, fieldsToIndex[i].getFieldValue());
 
 			} else {
 				//System.out.println("indexing journal");
 				fieldVal = getJournalArticleMeta(object, fieldsToIndex[i].getFieldValue());
-			}
+			}*/
+			
+			fieldVal = getJournalArticleMeta(object, fieldsToIndex[i].getFieldValue());
+			
+			////
 			
 			String fieldName = fieldsToIndex[i].getFieldName();
 			 
@@ -93,7 +97,7 @@ public class SearchIndexPostProcessor extends BaseIndexerPostProcessor {
 		}
 	}
 	
-	
+	/*
 	private String getDLFileMeta(Object object, String fieldName) throws PortalException, SystemException {
 		DLFileEntry article = (DLFileEntry) object;
 		String fieldVal = "";
@@ -142,7 +146,7 @@ public class SearchIndexPostProcessor extends BaseIndexerPostProcessor {
 			return "";
 		}
 	}
-	
+	*/
 	private String getJournalArticleMeta(Object object, String fieldName) {
 		JournalArticle article = (JournalArticle) object;
 		
@@ -155,7 +159,7 @@ public class SearchIndexPostProcessor extends BaseIndexerPostProcessor {
 			String xmlContent = article.getContent();
 			com.liferay.portal.kernel.xml.Document document = SAXReaderUtil.read(xmlContent);
 
-			
+			System.out.println("document: " + document);
 			
 			//get all nodes with field name (all in case it's a repeatable field like author
 			List<Node> nodes = document.selectNodes("/root/dynamic-element[@name='"  + fieldName + "']/dynamic-content");

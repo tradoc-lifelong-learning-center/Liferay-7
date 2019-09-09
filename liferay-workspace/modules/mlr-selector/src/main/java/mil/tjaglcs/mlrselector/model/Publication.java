@@ -689,8 +689,10 @@ public class Publication {
 			//System.out.println("hitsDocs: " + hitsDocs);
 			//System.out.println("hitsDocs.size(): " + hitsDocs.size());
 			
-			//System.out.println("hitsDocs.size(): " + hitsDocs.get(0).getField(Field.TITLE).getValue());
-			
+
+			//System.out.println("pub name: " + hitsDocs.get(0).get("title_en_US"));
+			//System.out.println("fs: " + hitsDocs.get(0).get("fs"));
+			//System.out.println("here ");
 			//System.out.println("doc: " + hitsDocs.get(0));
 			
 			for(int i = 0; i<hitsDocs.size(); i++) {
@@ -705,181 +707,22 @@ public class Publication {
 				
 				//System.out.println("fiels: " + currentDoc.getField("title"));
 				
-				String title = "Title not found";
-				long articleId = -1;
-				double version = -1;
-				int volume = -1;
-				String volumeName = "";
-				int issue = -1;
-				String issueName = "";
-				String type = "Type not found";
-				LocalDate articleDate = null;
-				int status = -1;
-				String authors = "";
-				String pdfType = "";
+				String title = currentDoc.get("title_en_US");
+				String type = currentDoc.get("entryClassName");
+				long articleId = fetchArticleId(currentDoc,type);
+				//TODO: Int, long, double will need some kind of try/catch in case it returns ""
+				double version = Double.parseDouble(currentDoc.get("version"));
+				int volume = Integer.parseInt(currentDoc.get("publicationVolume"));
+				String volumeName = currentDoc.get("publicationVolumeName");
+				int issue = Integer.parseInt(currentDoc.get("publicationIssue"));
+				String issueName = currentDoc.get("publicationIssueName");
 				
-				try {
-					if(currentDoc.getField(Field.TITLE) != null) {
-						System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
-						title = currentDoc.getField(Field.TITLE).getValue();
-						
-					}
-				} catch (Exception e1) {
-					System.out.println("title error");
-					e1.printStackTrace();
-					
-				} 
+				LocalDate articleDate = parseDate(currentDoc.get("publicationPublishDate"));
+				int status = Integer.parseInt(currentDoc.get("status"));
+				String authors = currentDoc.get("publicationAuthors");
+				String pdfType = currentDoc.get("publicationPdfType");
 				
-				try {
-					if(currentDoc.getField(CustomField.PUBLICATION_SUBTITLE) != null) {
-						//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
-						title = title + ": " + currentDoc.getField(CustomField.PUBLICATION_SUBTITLE).getValue();
-					}
-				} catch (Exception e1) {
-					System.out.println("subtitle error");
-					e1.printStackTrace();
-					
-				} 
 				
-				try {
-					if(currentDoc.getField(CustomField.VERSION) != null) {
-						//System.out.println("double: " + currentDoc.getField(CustomField.VERSION).getValue());
-						version = Double.parseDouble(currentDoc.getField(CustomField.VERSION).getValue());
-					}
-				} catch (Exception e1) {
-					System.out.println("version error");
-					e1.printStackTrace();
-					
-				} 
-				
-				try {
-					if(currentDoc.getField(CustomField.PUBLICATION_VOLUME) != null) {
-						//System.out.println("int: " + currentDoc.getField(CustomField.PUBLICATION_VOLUME).getValue());
-						volume = Integer.parseInt(currentDoc.getField(CustomField.PUBLICATION_VOLUME).getValue());
-					}
-				} catch (Exception e1) {
-					System.out.println("volume error");
-					e1.printStackTrace();
-					
-				} 
-				
-				try {
-					if(currentDoc.getField(CustomField.PUBLICATION_VOLUME_NAME) != null) {
-						//System.out.println("int: " + currentDoc.getField(CustomField.PUBLICATION_VOLUME).getValue());
-						volumeName = currentDoc.getField(CustomField.PUBLICATION_VOLUME_NAME).getValue();
-					}
-				} catch (Exception e1) {
-					System.out.println("volume name error");
-					e1.printStackTrace();
-					
-				} 
-				
-				try {
-					if(currentDoc.getField(CustomField.PUBLICATION_ISSUE) != null) {
-						//System.out.println("int: " + currentDoc.getField(CustomField.PUBLICATION_ISSUE).getValue());
-						issue = Integer.parseInt(currentDoc.getField(CustomField.PUBLICATION_ISSUE).getValue());
-					}
-				} catch (Exception e1) {
-					System.out.println("issue error");
-					e1.printStackTrace();
-					
-				} 
-				
-				try {
-					if(currentDoc.getField(CustomField.PUBLICATION_ISSUE_NAME) != null) {
-						//System.out.println("int: " + currentDoc.getField(CustomField.PUBLICATION_ISSUE).getValue());
-						issueName = currentDoc.getField(CustomField.PUBLICATION_ISSUE_NAME).getValue();
-					}
-				} catch (Exception e1) {
-					System.out.println("issue name error");
-					e1.printStackTrace();
-					
-				} 
-				
-				try { //does this really need to be custom field?
-					if(currentDoc.getField(CustomField.ENTRY_CLASS_NAME) != null) {
-						//System.out.println("string: " + currentDoc.getField(Field.ENTRY_CLASS_NAME).getValue());
-						type = currentDoc.getField(CustomField.ENTRY_CLASS_NAME).getValue();
-					}
-				} catch (Exception e1) {
-					System.out.println("class name error");
-					e1.printStackTrace();
-					
-				} 
-				
-				try {
-					if(currentDoc.getField(CustomField.PUBLICATION_DATE) != null) {
-						//System.out.println("Pub date field: " + currentDoc.getField(CustomField.PUBLICATION_DATE).getValue());
-						//System.out.println("is long? " + currentDoc.getField(CustomField.PUBLICATION_DATE).getValue() instanceof Long);
-						String fieldValue = currentDoc.getField(CustomField.PUBLICATION_DATE).getValue();
-						articleDate = parseDate(fieldValue);
-					}
-				} catch (Exception e1) {
-					System.out.println("pub date error");
-					e1.printStackTrace();
-					
-				} 
-				
-				try {
-					if(currentDoc.getField(Field.STATUS) != null) {
-						status = Integer.parseInt(currentDoc.getField(Field.STATUS).getValue());
-					}
-				} catch (Exception e1) {
-					System.out.println("status error");
-					e1.printStackTrace();
-					
-				} 
-				
-				try {
-					if(currentDoc.getField(CustomField.PUBLICATION_AUTHORS) != null) {
-						authors = currentDoc.getField(CustomField.PUBLICATION_AUTHORS).getValue();
-						boolean is = currentDoc.getField(CustomField.PUBLICATION_AUTHORS).getValues() instanceof String[];
-						String [] aString = currentDoc.getField(CustomField.PUBLICATION_AUTHORS).getValues();
-
-					} 
-				} catch (Exception e1) {
-					System.out.println("author error");
-					e1.printStackTrace();
-					
-				} 
-
-				try {
-					//System.out.println("pdf type field: " + currentDoc.getField(CustomField.PUBLICATION_PDF_TYPE));
-					if(currentDoc.getField(CustomField.PUBLICATION_PDF_TYPE) != null) {
-						pdfType = currentDoc.getField(CustomField.PUBLICATION_PDF_TYPE).getValues()[0];
-						
-					}
-				} catch (Exception ePDFType) {
-					System.out.println("PDF type error");
-					ePDFType.printStackTrace();
-					
-				} 
-
-				
-				try {
-					
-					if(type.contains("JournalArticle")) {
-						if(currentDoc.get("articleId") != null) {
-							//System.out.println("long: " + Long.parseLong(currentDoc.get("articleId")));
-							articleId = Long.parseLong(currentDoc.get("articleId"));
-						}
-					} else if(type.contains("DLFileEntry")) {
-						//getting fileEntryId (NOT PK)
-						long groupId = Long.parseLong(currentDoc.getField("groupId").getValue());						
-						long folderId = Long.parseLong(currentDoc.getField("folderId").getValue());
-						String docTitle = currentDoc.getField("title").getValue();
-						
-						DLFileEntry entry = DLFileEntryLocalServiceUtil.fetchFileEntry(groupId, folderId, docTitle);
-					
-		                articleId = entry.getFileEntryId();
-					} 
-					
-					
-					
-				} catch(Exception e) {
-					System.out.println("article id error");
-					e.printStackTrace();
-				}
 				
 				try {
 					LocalDate now = LocalDate.now();
@@ -902,18 +745,80 @@ public class Publication {
 					System.out.println("Couldn't create article object");
 					e.printStackTrace();
 				}
+				
+				
+				System.out.println("title: " + title);
+				//System.out.println("articleId: " + articleId);
+				//System.out.println("version: " + version);
+				System.out.println("volume: " + volume);
+				//System.out.println("volumeName: " + volumeName);
+				//System.out.println("issue: " + issue);
+				//System.out.println("issueName: " + issueName);
+				//System.out.println("type: " + type);
+				//System.out.println("articleDate: " + articleDate);
+				//System.out.println("status: " + status);
+				//System.out.println("authors: " + authors);
+				//System.out.println("pdfType: " + pdfType);
 			}
+			
+			
 			
 			System.out.println("made it!");
 			this.articles = articles;
 		}
+	
+	/*private Integer fetchIntField(Document currentDoc, String name) {
+		int value = Integer.parseInt(currentDoc.get(name));
+		
+		if(value=="") {
+			
+		} else {
+			
+		}
+		
+		
+		
+		return value;
+	}*/
+	
+	private Long fetchArticleId(Document currentDoc, String type) {
+		Long articleId = (long) -1;
+		
+		try {
+			
+			if(type.contains("JournalArticle")) {
+				if(currentDoc.get("articleId") != null) {
+					//System.out.println("long: " + Long.parseLong(currentDoc.get("articleId")));
+					articleId = Long.parseLong(currentDoc.get("articleId"));
+				}
+			} else if(type.contains("DLFileEntry")) {
+				//getting fileEntryId (NOT PK)
+				long groupId = Long.parseLong(currentDoc.getField("groupId").getValue());						
+				long folderId = Long.parseLong(currentDoc.getField("folderId").getValue());
+				String docTitle = currentDoc.getField("title").getValue();
+				
+				DLFileEntry entry = DLFileEntryLocalServiceUtil.fetchFileEntry(groupId, folderId, docTitle);
+			
+                articleId = entry.getFileEntryId();
+			} 
+			
+			
+			
+		} catch(Exception e) {
+			System.out.println("article id error");
+			e.printStackTrace();
+		}
+		
+		return articleId;
+		
+	}
 	
 	private LocalDate parseDate(String dateString) {
 		//set a default date which will show for null dates
 		LocalDate date = null;
 		
 		//if this will parse to long, it's epoch
-		try {
+		/*try {
 			long fieldValue = Long.parseLong(dateString);
 			date = Instant.ofEpochMilli(fieldValue).atZone(ZoneId.systemDefault()).toLocalDate();
 		} catch (NumberFormatException e) {
@@ -923,6 +828,13 @@ public class Publication {
 		//otherwise, try to parse string
         try {
         	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+			date = LocalDate.parse(dateString, formatter);
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}*/
+        
+        try {
+        	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
 			date = LocalDate.parse(dateString, formatter);
 		} catch (Exception e) {
 			//e.printStackTrace();

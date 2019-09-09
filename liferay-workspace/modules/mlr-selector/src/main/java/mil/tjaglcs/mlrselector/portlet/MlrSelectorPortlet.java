@@ -17,6 +17,7 @@ import org.osgi.service.component.annotations.Component;
 import mil.tjaglcs.mlrselector.constants.MlrSelectorPortletKeys;
 import mil.tjaglcs.mlrselector.model.Publication;
 
+
 /**
  * @author Jag
  */
@@ -26,9 +27,10 @@ import mil.tjaglcs.mlrselector.model.Publication;
 		"com.liferay.portlet.display-category=TJAGLCS",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
 		"com.liferay.portlet.instanceable=true",
-		"javax.portlet.display-name=MlrSelector",
+		"javax.portlet.display-name=MLR Selector",
 		"javax.portlet.init-param.template-path=/",
 		"javax.portlet.init-param.view-template=/view.jsp",
+		"javax.portlet.init-param.config-template=/config.jsp",
 		"javax.portlet.name=" + MlrSelectorPortletKeys.MLRSELECTOR,
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=power-user,user"
@@ -52,7 +54,6 @@ public class MlrSelectorPortlet extends MVCPortlet {
 			System.out.println("caught!");
 			e.printStackTrace();
 		}
-
 		
 		
 		renderRequest.setAttribute("publication", this.publication);

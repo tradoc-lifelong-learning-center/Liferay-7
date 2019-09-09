@@ -662,8 +662,12 @@ public class Publication {
 			
 			
 			//Query stringQuery = new StringQuery("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.portlet.journal.model.JournalArticle AND head:true) OR entryClassName:com.liferay.portlet.documentlibrary.model.DLFileEntry)");
-			Query stringQuery = new StringQuery("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
-			//Query stringQuery = new StringQuery("automatism");
+			
+			
+			//Query stringQuery = new StringQuery("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
+			//Query stringQuery = new StringQuery("(publicationName:\"Military Law Review\") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
+			Query stringQuery = new StringQuery("(publicationName:\"Military Law Review\") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
+			//Query stringQuery = new StringQuery("testField: \"Military Law Review Document\"");
 
 			
 			BooleanQuery searchQuery = new BooleanQueryImpl();
@@ -683,13 +687,23 @@ public class Publication {
 			List<Article> articles = new ArrayList<>();
 			
 			//System.out.println("hitsDocs: " + hitsDocs);
-			System.out.println("hitsDocs.size(): " + hitsDocs.size());
+			//System.out.println("hitsDocs.size(): " + hitsDocs.size());
 			
-			System.out.println("hitsDocs.size(): " + hitsDocs.get(0).getField(Field.TITLE).getValue());
+			//System.out.println("hitsDocs.size(): " + hitsDocs.get(0).getField(Field.TITLE).getValue());
+			
+			//System.out.println("doc: " + hitsDocs.get(0));
 			
 			for(int i = 0; i<hitsDocs.size(); i++) {
 				
 				Document currentDoc = hitsDocs.get(i);
+				
+				//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
+				//System.out.println("currentDoc: " + currentDoc);
+				//System.out.println("TITLE: " + currentDoc.getField("TITLE"));
+				//System.out.println("Title: " + currentDoc.getField("Title"));
+				//System.out.println("title: " + currentDoc.getField("title"));
+				
+				//System.out.println("fiels: " + currentDoc.getField("title"));
 				
 				String title = "Title not found";
 				long articleId = -1;

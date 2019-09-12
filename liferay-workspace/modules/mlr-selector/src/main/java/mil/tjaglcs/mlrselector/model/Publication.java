@@ -711,17 +711,16 @@ public class Publication {
 				String type = currentDoc.get("entryClassName");
 				long articleId = fetchArticleId(currentDoc,type);
 				//TODO: Int, long, double will need some kind of try/catch in case it returns ""
-				double version = Double.parseDouble(currentDoc.get("version"));
-				int volume = Integer.parseInt(currentDoc.get("publicationVolume"));
+				double version = fetchValidDouble("version", currentDoc);
+				int volume = fetchValidInt("publicationVolume", currentDoc);
 				String volumeName = currentDoc.get("publicationVolumeName");
-				int issue = Integer.parseInt(currentDoc.get("publicationIssue"));
+				int issue = fetchValidInt("publicationIssue", currentDoc); 
 				String issueName = currentDoc.get("publicationIssueName");
 				
 				LocalDate articleDate = parseDate(currentDoc.get("publicationPublishDate"));
 				int status = Integer.parseInt(currentDoc.get("status"));
 				String authors = currentDoc.get("publicationAuthors");
 				String pdfType = currentDoc.get("publicationPdfType");
-				
 				
 				
 				try {
@@ -766,6 +765,30 @@ public class Publication {
 			System.out.println("made it!");
 			this.articles = articles;
 		}
+	
+	public int fetchValidInt(String name, Document currentDoc) {
+		
+		String value = currentDoc.get(name);
+		
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	public double fetchValidDouble(String name, Document currentDoc) {
+		
+		String value = currentDoc.get(name);
+		
+		try {
+			return Double.parseDouble(value);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
 	
 	/*private Integer fetchIntField(Document currentDoc, String name) {
 		int value = Integer.parseInt(currentDoc.get(name));

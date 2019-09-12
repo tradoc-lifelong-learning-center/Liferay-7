@@ -261,7 +261,8 @@ public class Publication {
 
 	public void setIsSingleIssue(RenderRequest request) {
 		PortletPreferences portletPreferences = request.getPreferences();
-		String configValue = GetterUtil.getString(portletPreferences.getValue("numberOfIssues", ""));
+		//String configValue = GetterUtil.getString(portletPreferences.getValue("numberOfIssues", ""));
+		String configValue = "multi";
 		
 		//System.out.println("configValue: " + configValue);
 		

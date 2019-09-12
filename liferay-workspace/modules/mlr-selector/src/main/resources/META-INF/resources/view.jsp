@@ -1,10 +1,5 @@
 <%@ include file="/init.jsp" %>
 
-<p>
-	<b><liferay-ui:message key="mlrselector.caption"/>, 7.2!</b>
-</p>
-
-
 <jsp:useBean id="mlr" class="mil.tjaglcs.mlrselector.portlet.MlrSelectorPortlet"/>
 
 <c:catch var ="catchException">
@@ -23,8 +18,10 @@
 	
 	<c:otherwise>
 	
+	<div class="mlr-selector">
 	
-		<aui:form cssClass="mlr-selector">
+	
+		<aui:form cssClass="mlr-selector-form">
 		
 		<c:if test="${pubData.getIsPageContainesMostRecent()==true }"><p class="most-recent-label">Most Recent Issue</p></c:if>
 		
@@ -36,7 +33,7 @@
 				<div id="noUiSliderRange" data-min-year="${pubData.getStartYear() }" data-max-year="${pubData.getEndYear() }"></div>
 			</div>
 			
-			<span class="noUi--year-label" id="noUiSliderMax">${pubData.getStartYear() }</span>
+			<span class="noUi--year-label" id="noUiSliderMax">${pubData.getEndYear() }</span>
 		</div>
 			
 	    <aui:fieldset cssClass="selector-fieldset">
@@ -152,9 +149,11 @@
 	</c:forEach>
 	</div>
 	
+
+
 	<aui:script use="aui-base, event, node">
-	    
 	    (function(){
+	    
 	    	var config = {
 	        		'namespace': '<portlet:namespace/>',
 	                'jsonData': ${pubData.getJson() },
@@ -215,6 +214,7 @@
 	        }
 	        
 	        function populateIssueMenu(menu,yearObj){
+	        	
 	        	clearMenu(menu);
 	        	
 	        	var fragment = document.createDocumentFragment();
@@ -270,10 +270,11 @@
         				optionArray.push(option);
         			}
         			optionArray.sort(sortByValue);
-
-    	        	for(var i = 0; i&lt;optionArray.length; i++){
+					
+    	        	for(var i = 0; i < optionArray.length; i++){
     	        		optionGroup.appendChild(optionArray[i]);
     	        	}
+    	        	
 					
     	        	fragment.appendChild(optionGroup);
 	        	}
@@ -282,6 +283,8 @@
 	        }
 	        
 	        function populateVolumeMenu(menu, items, startYear, endYear){
+	        	console.log("populating volume menu!");
+	        	
 	        	if(!startYear){
 	        		startYear=0;
 	        	}
@@ -424,6 +427,9 @@
 	        	var minInput = document.querySelector('#noUiSliderMin');
 	        	var maxInput = document.querySelector('#noUiSliderMax');
 	        	
+	        	console.log("min: " + min);
+	        	console.log("max: " + max);
+	        	
 	        	//slider can't handle it when there's just one year
 	        	if(min==max){
 	        		return false;
@@ -471,7 +477,9 @@
 	        function disableMenu(menu){
 	        	menu.setAttribute("disabled", "disabled");
 	        }
-	        
+		
+
+			        
 	    })();
 	 	
 	    
@@ -479,6 +487,9 @@
 	    
 	
 	</aui:script>
+	
+	</div>
+	
 	</c:otherwise>
 
 </c:choose>

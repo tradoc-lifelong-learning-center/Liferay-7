@@ -746,10 +746,10 @@ public class Publication {
 				}
 				
 				
-				System.out.println("title: " + title);
+				//System.out.println("title: " + title);
 				//System.out.println("articleId: " + articleId);
 				//System.out.println("version: " + version);
-				System.out.println("volume: " + volume);
+				//System.out.println("volume: " + volume);
 				//System.out.println("volumeName: " + volumeName);
 				//System.out.println("issue: " + issue);
 				//System.out.println("issueName: " + issueName);
@@ -773,7 +773,7 @@ public class Publication {
 		try {
 			return Integer.parseInt(value);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return -1;
 		}
 	}
@@ -785,7 +785,7 @@ public class Publication {
 		try {
 			return Double.parseDouble(value);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return -1;
 		}
 	}

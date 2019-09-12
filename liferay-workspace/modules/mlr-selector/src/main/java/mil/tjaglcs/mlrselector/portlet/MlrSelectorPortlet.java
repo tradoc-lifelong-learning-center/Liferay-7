@@ -26,6 +26,8 @@ import mil.tjaglcs.mlrselector.model.Publication;
 	property = {
 		"com.liferay.portlet.display-category=TJAGLCS",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
+		"com.liferay.portlet.header-portlet-javascript=/js/main.js",
+		"com.liferay.portlet.header-portlet-javascript=/js/nouislider.min.js",
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.display-name=MLR Selector",
 		"javax.portlet.init-param.template-path=/",

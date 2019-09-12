@@ -39,39 +39,15 @@ import mil.tjaglcs.mlrselector.model.Publication;
 )
 public class MlrSelectorPortlet extends MVCPortlet {
 	
-	private Publication publication;
-	
-	
-	@Override
-	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
-	    throws PortletException, IOException {
-		
-		try {
-			this.publication = fetchPublication(renderRequest);
-			System.out.println(this.publication);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("caught!");
-			e.printStackTrace();
-		}
-		
-		
-		renderRequest.setAttribute("publication", this.publication);
-
-		//System.out.println("super: render");
-	    super.render(renderRequest, renderResponse);
-	}
-	
 	public Publication fetchPublication(RenderRequest request) throws Exception {
-		//System.out.println("trying to get pub");
 		
 		PortletPreferences portletPreferences = request.getPreferences();
-		
-		//TODO: reenable
 		//String pubName = GetterUtil.getString(portletPreferences.getValue("publicationName", ""));
 		String pubName = "Military Law Review";
 		
 		Publication pub = new Publication(pubName, request);
+		
+		System.out.println("pub: " + pub);
 		
 		return pub;
 	}

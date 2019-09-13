@@ -9,9 +9,15 @@
 	    box-shadow:inset 0 0 1px #FFF, inset 0 1px 7px #ebebeb, 0 3px 6px -3px rgba(0,0,0,.7);
 	}
 	
-	.content-selector-form{
+	.mlr-selector-form{
 	    background-color:#555;
 	    padding:1rem;
+	    
+	    select{
+	    	min-width:250px;
+	    	margin: 0 .5rem 0 .5rem;
+	    }
+	    
 	}
 	
 	/*center vol/issue selector*/

@@ -5,7 +5,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 
 
 @ExtendedObjectClassDefinition(
-	    category = "Content and Data",
+	    //category = "Content and Data",
 	    scope = ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE
 	)
 

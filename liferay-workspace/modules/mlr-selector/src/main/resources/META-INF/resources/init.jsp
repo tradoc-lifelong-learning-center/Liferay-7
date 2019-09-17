@@ -8,6 +8,20 @@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
+<%@ page import="mil.tjaglcs.mlrselector.portlet.MlrSelectorConfiguration" %>
+<%@ page import="com.liferay.portal.kernel.util.StringPool" %>
+<%@ page import="com.liferay.portal.kernel.util.Validator" %>
+
 <liferay-theme:defineObjects />
 
 <portlet:defineObjects />
+
+<%
+MlrSelectorConfiguration mlrSelectorConfiguration =
+		(MlrSelectorConfiguration)
+		renderRequest.getAttribute(MlrSelectorConfiguration.class.getName());
+	String publicationName = StringPool.BLANK;
+	if (Validator.isNotNull(mlrSelectorConfiguration)) {
+		publicationName = portletPreferences.getValue("publicationName", mlrSelectorConfiguration.publicationName());
+	}
+%>

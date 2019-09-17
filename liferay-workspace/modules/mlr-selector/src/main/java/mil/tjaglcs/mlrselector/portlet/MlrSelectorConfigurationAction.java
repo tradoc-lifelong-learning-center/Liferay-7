@@ -61,6 +61,7 @@ public class MlrSelectorConfigurationAction
 		}*/
 
 		String publicationName = ParamUtil.getString(actionRequest, "publicationName");
+		String issueDisplay = ParamUtil.getString(actionRequest, "issueDisplay");
 
 		/*if (_log.isInfoEnabled()) {
 			_log.info(
@@ -74,7 +75,7 @@ public class MlrSelectorConfigurationAction
 
 		setPreference(actionRequest, "publicationName", publicationName);
 		
-		//setPreference(actionRequest, "publicationName", "military law review");
+		setPreference(actionRequest, "issueDisplay", issueDisplay);
 
 		super.processAction(portletConfig, actionRequest, actionResponse);
 	}

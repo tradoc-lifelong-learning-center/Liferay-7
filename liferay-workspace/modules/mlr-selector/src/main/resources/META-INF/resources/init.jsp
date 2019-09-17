@@ -21,7 +21,9 @@ MlrSelectorConfiguration mlrSelectorConfiguration =
 		(MlrSelectorConfiguration)
 		renderRequest.getAttribute(MlrSelectorConfiguration.class.getName());
 	String publicationName = StringPool.BLANK;
+	String issueDisplay = StringPool.BLANK;
 	if (Validator.isNotNull(mlrSelectorConfiguration)) {
 		publicationName = portletPreferences.getValue("publicationName", mlrSelectorConfiguration.publicationName());
+		issueDisplay = portletPreferences.getValue("issueDisplay", mlrSelectorConfiguration.issueDisplay());
 	}
 %>

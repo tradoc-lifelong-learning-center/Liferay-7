@@ -22,10 +22,10 @@ public interface MlrSelectorConfiguration {
 	)
 	public String publicationName();
 	
-	/*@Meta.AD(
+	@Meta.AD(
 			deflt="multi",
-			required = true
+			required = false
 	)
-	public String issueDisplay();*/
+	public String issueDisplay();
 
 }

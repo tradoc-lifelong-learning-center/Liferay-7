@@ -54,6 +54,16 @@
 			<aui:option value="Military Law Review">Military Law Review</aui:option>
 			<aui:option value="The Army Lawyer">The Army Lawyer</aui:option>
 		</aui:select>
+		
+		<aui:select
+			label="Issue Display"
+			name="issueDisplay"
+			value="<%= issueDisplay %>"
+		>
+			<aui:option value="multi">Multi</aui:option>
+			<aui:option value="single">Single</aui:option>
+			
+		</aui:select>
 
 	</aui:fieldset>
 

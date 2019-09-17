@@ -1,18 +1,17 @@
 package mil.tjaglcs.mlrselector.portlet;
 
-import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.util.GetterUtil;
 
-import java.io.IOException;
+import java.util.Map;
 
 import javax.portlet.Portlet;
-import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 
 import mil.tjaglcs.mlrselector.constants.MlrSelectorPortletKeys;
 import mil.tjaglcs.mlrselector.model.Publication;
@@ -22,6 +21,7 @@ import mil.tjaglcs.mlrselector.model.Publication;
  * @author Jag
  */
 @Component(
+	configurationPid = "mil.tjaglcs.mlrselector.portlet.MlrSelectorConfiguration",
 	immediate = true,
 	property = {
 		"com.liferay.portlet.display-category=TJAGLCS",
@@ -53,6 +53,15 @@ public class MlrSelectorPortlet extends MVCPortlet {
 		
 		return pub;
 	}
+	
+	@Activate
+	@Modified
+	protected void activate(Map<Object, Object> properties) {
+		_mlrDisplayConfiguration = ConfigurableUtil.createConfigurable(
+				MlrSelectorConfiguration.class, properties);
+	}
+	
+	private volatile MlrSelectorConfiguration _mlrDisplayConfiguration;
 	
 	
 }

@@ -71,7 +71,7 @@ public class MlrSelectorPortlet extends MVCPortlet {
 	
 		Publication pub = new Publication(pubName, request);
 		
-		System.out.println("pub: " + pub);
+		//System.out.println("pub: " + pub);
 		
 		return pub;
 	}

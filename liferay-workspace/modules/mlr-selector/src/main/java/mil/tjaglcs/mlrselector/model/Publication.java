@@ -55,18 +55,18 @@ public class Publication {
 		this.request = request;
 		this.name = name;
 		
-		System.out.println("name: " + name);
+		//System.out.println("name: " + name);
 		
 		setArticles(name, request);
 		
-		System.out.println("articles: " + articles);
+		//System.out.println("articles: " + articles);
 		
 		//filter volumes by type: if there's both an article and PDF, only show article
 		filterArticlePDFs();
 		
 		setVolumes();
 		
-		System.out.println("volumes: " + this.volumes);
+		//System.out.println("volumes: " + this.volumes);
 		
 		groupVolumesByYear();
 
@@ -501,7 +501,7 @@ public class Publication {
 		if(this.isSingleIssue && (this.selectedVolumes.size()==1)) {
 			Volume vol = this.selectedVolumes.get(0);
 			
-			System.out.println("volume: " + vol);
+			//System.out.println("volume: " + vol);
 			
 			if(issueString!=null) {
 				vol.setSelectedIssue(Integer.parseInt(issueString));
@@ -678,37 +678,19 @@ public class Publication {
 			
 			Hits hits = IndexSearcherHelperUtil.search(searchContext,searchQuery);
 			
-			System.out.println("hits: " + hits.getLength());
+			//System.out.println("hits: " + hits.getLength());
 			
 			List<Document> hitsDocs = hits.toList();
 			
 			List<Article> articles = new ArrayList<>();
 			
-			//System.out.println("hitsDocs: " + hitsDocs);
-			//System.out.println("hitsDocs.size(): " + hitsDocs.size());
-			
-
-			//System.out.println("pub name: " + hitsDocs.get(0).get("title_en_US"));
-			//System.out.println("fs: " + hitsDocs.get(0).get("fs"));
-			//System.out.println("here ");
-			//System.out.println("doc: " + hitsDocs.get(0));
-			
 			for(int i = 0; i<hitsDocs.size(); i++) {
 				
 				Document currentDoc = hitsDocs.get(i);
 				
-				//System.out.println("string: " + currentDoc.getField(Field.TITLE).getValue());
-				//System.out.println("currentDoc: " + currentDoc);
-				//System.out.println("TITLE: " + currentDoc.getField("TITLE"));
-				//System.out.println("Title: " + currentDoc.getField("Title"));
-				//System.out.println("title: " + currentDoc.getField("title"));
-				
-				//System.out.println("fiels: " + currentDoc.getField("title"));
-				
 				String title = currentDoc.get("title_en_US");
 				String type = currentDoc.get("entryClassName");
 				long articleId = fetchArticleId(currentDoc,type);
-				//TODO: Int, long, double will need some kind of try/catch in case it returns ""
 				double version = fetchValidDouble("version", currentDoc);
 				int volume = fetchValidInt("publicationVolume", currentDoc);
 				String volumeName = currentDoc.get("publicationVolumeName");
@@ -742,25 +724,12 @@ public class Publication {
 					System.out.println("Couldn't create article object");
 					e.printStackTrace();
 				}
-				
-				
-				//System.out.println("title: " + title);
-				//System.out.println("articleId: " + articleId);
-				//System.out.println("version: " + version);
-				//System.out.println("volume: " + volume);
-				//System.out.println("volumeName: " + volumeName);
-				//System.out.println("issue: " + issue);
-				//System.out.println("issueName: " + issueName);
-				//System.out.println("type: " + type);
-				//System.out.println("articleDate: " + articleDate);
-				//System.out.println("status: " + status);
-				//System.out.println("authors: " + authors);
-				//System.out.println("pdfType: " + pdfType);
+
 			}
 			
 			
 			
-			System.out.println("made it!");
+			//System.out.println("made it!");
 			this.articles = articles;
 		}
 	
@@ -787,20 +756,7 @@ public class Publication {
 			return -1;
 		}
 	}
-	
-	/*private Integer fetchIntField(Document currentDoc, String name) {
-		int value = Integer.parseInt(currentDoc.get(name));
-		
-		if(value=="") {
-			
-		} else {
-			
-		}
-		
-		
-		
-		return value;
-	}*/
+
 	
 	private Long fetchArticleId(Document currentDoc, String type) {
 		Long articleId = (long) -1;
@@ -837,22 +793,6 @@ public class Publication {
 	private LocalDate parseDate(String dateString) {
 		//set a default date which will show for null dates
 		LocalDate date = null;
-		
-		//if this will parse to long, it's epoch
-		/*try {
-			long fieldValue = Long.parseLong(dateString);
-			date = Instant.ofEpochMilli(fieldValue).atZone(ZoneId.systemDefault()).toLocalDate();
-		} catch (NumberFormatException e) {
-			//e.printStackTrace();
-		}
-		
-		//otherwise, try to parse string
-        try {
-        	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-			date = LocalDate.parse(dateString, formatter);
-		} catch (Exception e) {
-			//e.printStackTrace();
-		}*/
         
         try {
         	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);

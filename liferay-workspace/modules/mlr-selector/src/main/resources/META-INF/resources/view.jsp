@@ -1,5 +1,9 @@
 <%@ include file="/init.jsp" %>
 
+<%
+boolean doConfigure = Validator.isNull(publicationName) && Validator.isNull(issueDisplay);
+%>
+
 <jsp:useBean id="mlr" class="mil.tjaglcs.mlrselector.portlet.MlrSelectorPortlet"/>
 
 <c:catch var ="catchException">
@@ -21,6 +25,8 @@
 	<div class="mlr-selector">
 	
 	
+		<p>config value: <c:out value="${publicationName }"/> <%= publicationName %> </p>
+		<p>config value: <%= issueDisplay %> </p>  
 		<aui:form cssClass="mlr-selector-form">
 		
 		<c:if test="${pubData.getIsPageContainesMostRecent()==true }"><p class="most-recent-label">Most Recent Issue</p></c:if>

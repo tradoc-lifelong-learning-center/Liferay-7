@@ -260,12 +260,8 @@ public class Publication {
 
 
 	public void setIsSingleIssue(RenderRequest request) {
-		PortletPreferences portletPreferences = request.getPreferences();
-		//String configValue = GetterUtil.getString(portletPreferences.getValue("numberOfIssues", ""));
-		//String configValue = "multi";
-		String configValue = "single";
 		
-		//System.out.println("configValue: " + configValue);
+		String configValue = request.getAttribute("issueDisplay").toString();
 		
 		if(configValue.contains("multi")) {
 			//System.out.println("multi issue!");
@@ -668,7 +664,7 @@ public class Publication {
 			
 			//Query stringQuery = new StringQuery("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
 			//Query stringQuery = new StringQuery("(publicationName:\"Military Law Review\") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
-			Query stringQuery = new StringQuery("(publicationName:\"Military Law Review\") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
+			Query stringQuery = new StringQuery("(publicationName:\"" + pubName + "\") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
 			//Query stringQuery = new StringQuery("testField: \"Military Law Review Document\"");
 
 			

@@ -1,13 +1,20 @@
 package mil.tjaglcs.mlrselector.portlet;
 
+//import static com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet._log;
+
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.portlet.Portlet;
+import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -44,14 +51,45 @@ public class MlrSelectorPortlet extends MVCPortlet {
 	public Publication fetchPublication(RenderRequest request) throws Exception {
 		
 		PortletPreferences portletPreferences = request.getPreferences();
-		//String pubName = GetterUtil.getString(portletPreferences.getValue("publicationName", ""));
-		String pubName = "Military Law Review";
 		
+		MlrSelectorConfiguration mlrSelectorConfiguration = 
+				(MlrSelectorConfiguration)
+				request.getAttribute(MlrSelectorConfiguration.class.getName());
+
+			String pubName = StringPool.BLANK;
+			String issueDisplay = StringPool.BLANK;
+
+			if (Validator.isNotNull(mlrSelectorConfiguration)) {
+				pubName = portletPreferences.getValue("publicationName", mlrSelectorConfiguration.publicationName());
+				issueDisplay = portletPreferences.getValue("issueDisplay", mlrSelectorConfiguration.issueDisplay());
+			}
+		
+		
+		//String pubName = GetterUtil.getString(portletPreferences.getValue("publicationName", ""));
+		//String pubName = "Military Law Review";
+		request.setAttribute("issueDisplay", issueDisplay);
+	
 		Publication pub = new Publication(pubName, request);
 		
 		System.out.println("pub: " + pub);
 		
 		return pub;
+	}
+	
+	@Override
+	public void doView(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		/*if (_log.isInfoEnabled()) {
+			_log.info("Blade Message Portlet render");
+		}*/
+
+		renderRequest.setAttribute(
+			MlrSelectorConfiguration.class.getName(),
+			_mlrDisplayConfiguration);
+
+		super.doView(renderRequest, renderResponse);
 	}
 	
 	@Activate

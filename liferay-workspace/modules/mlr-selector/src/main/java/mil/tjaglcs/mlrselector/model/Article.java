@@ -2,6 +2,8 @@ package mil.tjaglcs.mlrselector.model;
 
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
+import com.liferay.journal.model.JournalArticle;
+import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.JournalContentSearchLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -15,6 +17,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.RenderRequest;
 
@@ -193,8 +197,11 @@ public class Article implements Comparable<Article> {
 	
 	public void setURL(RenderRequest request) throws SystemException, PortalException, UnsupportedEncodingException {
 
+		//TODO: If there's a layout, use that URL. Else, use friendly URL
+		
 		String documentClassName = "DLFileEntry";
 		String journalClassName = "JournalArticle";
+		String friendlyUrl = "";
 
 		if(this.type.contains(journalClassName)) {
 			//System.out.println("Journal!");
@@ -207,7 +214,39 @@ public class Article implements Comparable<Article> {
 			ThemeDisplay themeDisplay = getThemeDisplay(request);
 
 			long articleId = this.getId();
+			
+			//now, if no layout, try friendly url
+			//but only if display page is configured
+			
+			
+			try {
+				Locale locale = new Locale("en", "US");
+				JournalArticle article = JournalArticleLocalServiceUtil.getArticle(groupId, String.valueOf(this.id));
+				Map<Locale, String> map = article.getFriendlyURLMap();
+				/*System.out.println("_______");
+				System.out.println("map: " + map);
+				System.out.println("locale: " + locale);
+				System.out.println("locale language: " + locale.getLanguage());
+				System.out.println("map str: " + map.get("en_US"));
+				System.out.println("map locale: " + map.get(locale));
+				System.out.println("map size: " + map.size());
+				System.out.println("map val: " + map.containsValue("keeping-commitments"));
+				System.out.println("map key: " + map.containsKey(locale));
+				System.out.println("map key set: " + map.keySet());*/
+				
+				friendlyUrl = themeDisplay.getURLPortal() + "/-/" + map.get(locale);
+				
+				System.out.println("friendlyUrl: " + friendlyUrl);
+				
+				//System.out.println(themeDisplay.getURLPortal());
 
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				System.out.println("no article!");
+				e.printStackTrace();
+			}
+			
 			
 			List<Long> layoutIds = JournalContentSearchLocalServiceUtil.getLayoutIds(groupId, false, Long.toString(articleId));
 			
@@ -218,6 +257,8 @@ public class Article implements Comparable<Article> {
 				  //String url = PortalUtil.getLayoutFriendlyURL(layout, themeDisplay);
 				  //System.out.println("url: " + url);
 				  this.url = url;
+				} else if(layoutIds.isEmpty()) {  //don't forget to include IF for has display page
+					this.url = friendlyUrl;
 				}
 			
 		} else if(this.type.contains(documentClassName)) {

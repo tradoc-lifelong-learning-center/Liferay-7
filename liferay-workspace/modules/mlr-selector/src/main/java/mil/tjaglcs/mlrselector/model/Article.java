@@ -197,8 +197,6 @@ public class Article implements Comparable<Article> {
 	
 	public void setURL(RenderRequest request) throws SystemException, PortalException, UnsupportedEncodingException {
 
-		//TODO: If there's a layout, use that URL. Else, use friendly URL
-		
 		String documentClassName = "DLFileEntry";
 		String journalClassName = "JournalArticle";
 
@@ -206,8 +204,8 @@ public class Article implements Comparable<Article> {
 			//IF this has a layout (is placed on a page with web content display), use that URL
 			//ELSE IF it has a display page configured, use friendly URL
 			//ELSE, empty URL
-			System.out.println("-------------");
 			
+			//System.out.println("-------------");
 			String friendlyUrl = "";
 			long groupId = getGroupId();
 			ThemeDisplay themeDisplay = getThemeDisplay(request);
@@ -216,39 +214,46 @@ public class Article implements Comparable<Article> {
 			JournalArticle article = JournalArticleLocalServiceUtil.getArticle(groupId, String.valueOf(this.id));
 			Layout articleLayout = article.getLayout(); // <-- this layout is the display page
 			List<Long> layoutIds = JournalContentSearchLocalServiceUtil.getLayoutIds(groupId, false, Long.toString(articleId)); // <-- these layout IDs are for pages that contain the article in a web content display portlet
+			String layoutUrl = ""; //<--the url for the page that contains article in web content portlet
 
 			//System.out.println("layout: " + articleLayout);
 			Boolean hasDisplayPage = false;
+			Boolean hasLayoutPage = false;
 			
-			System.out.println("articleId: "+ articleId);
+			//System.out.println("articleId: "+ articleId);
 			
 			//if there's a display page set up, get friendly URL
 			if(articleLayout != null) {
 				hasDisplayPage = true;
 				
-				System.out.println("display page URL: " + articleLayout.getFriendlyURL()); // <--looks like this is the display page URL!
+				//System.out.println("display page URL: " + articleLayout.getFriendlyURL()); // <--looks like this is the display page URL!
 				
 				Map<Locale, String> map = article.getFriendlyURLMap();
-				System.out.println("map: " + map);
+				//System.out.println("map: " + map);
 				
 				friendlyUrl = themeDisplay.getURLPortal() + "/-/" + map.get(locale);
 				
-				System.out.println("friendlyUrl: " + friendlyUrl);
+				//System.out.println("friendlyUrl: " + friendlyUrl);
 			}
 
 			//the the content exists on a page in a web content display portlet, get that URL
-			//then decide which to use
 			if (!layoutIds.isEmpty()) {
-				System.out.println("layout ids: " + layoutIds);
+				hasLayoutPage = true;
+				//System.out.println("layout ids: " + layoutIds);
 				  long layoutId = layoutIds.get(0).longValue();
 				  Layout layout = LayoutLocalServiceUtil.getLayout(groupId, false, layoutId);
 				  String url = PortalUtil.getLayoutURL(layout, themeDisplay);
 				  //System.out.println("url: " + url);
-				  this.url = url;
-				  System.out.println("built url: " + url);
-				} else if(layoutIds.isEmpty() && hasDisplayPage) {  //don't forget to include IF for has display page
+				  layoutUrl = url;
+				  //System.out.println("layoutUrl: " + layoutUrl);
+				}
+			
+			//then decide which to use
+			if (hasLayoutPage) { //if it has a layout page, use that URL
+				  this.url = layoutUrl;
+				} else if(!hasLayoutPage && hasDisplayPage) {  //if no layout page but has display page, us display page url
 					this.url = friendlyUrl;
-				} else {
+				} else { //otherwise, no url
 					this.url = null;
 				}
 			

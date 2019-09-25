@@ -201,64 +201,55 @@ public class Article implements Comparable<Article> {
 		
 		String documentClassName = "DLFileEntry";
 		String journalClassName = "JournalArticle";
-		String friendlyUrl = "";
 
 		if(this.type.contains(journalClassName)) {
-			//System.out.println("Journal!");
-
-			//trying to find parent page URL. from https://stackoverflow.com/questions/8397679/get-portlet-page-containing-web-content-in-liferay
+			//IF this has a layout (is placed on a page with web content display), use that URL
+			//ELSE IF it has a display page configured, use friendly URL
+			//ELSE, empty URL
+			System.out.println("-------------");
+			
+			String friendlyUrl = "";
 			long groupId = getGroupId();
-			
-			//System.out.println(groupId);
-			
 			ThemeDisplay themeDisplay = getThemeDisplay(request);
-
 			long articleId = this.getId();
+			Locale locale = new Locale("en", "US");
+			JournalArticle article = JournalArticleLocalServiceUtil.getArticle(groupId, String.valueOf(this.id));
+			Layout articleLayout = article.getLayout(); // <-- this layout is the display page
+			List<Long> layoutIds = JournalContentSearchLocalServiceUtil.getLayoutIds(groupId, false, Long.toString(articleId)); // <-- these layout IDs are for pages that contain the article in a web content display portlet
+
+			//System.out.println("layout: " + articleLayout);
+			Boolean hasDisplayPage = false;
 			
-			//now, if no layout, try friendly url
-			//but only if display page is configured
+			System.out.println("articleId: "+ articleId);
 			
-			
-			try {
-				Locale locale = new Locale("en", "US");
-				JournalArticle article = JournalArticleLocalServiceUtil.getArticle(groupId, String.valueOf(this.id));
+			//if there's a display page set up, get friendly URL
+			if(articleLayout != null) {
+				hasDisplayPage = true;
+				
+				System.out.println("display page URL: " + articleLayout.getFriendlyURL()); // <--looks like this is the display page URL!
+				
 				Map<Locale, String> map = article.getFriendlyURLMap();
-				/*System.out.println("_______");
 				System.out.println("map: " + map);
-				System.out.println("locale: " + locale);
-				System.out.println("locale language: " + locale.getLanguage());
-				System.out.println("map str: " + map.get("en_US"));
-				System.out.println("map locale: " + map.get(locale));
-				System.out.println("map size: " + map.size());
-				System.out.println("map val: " + map.containsValue("keeping-commitments"));
-				System.out.println("map key: " + map.containsKey(locale));
-				System.out.println("map key set: " + map.keySet());*/
 				
 				friendlyUrl = themeDisplay.getURLPortal() + "/-/" + map.get(locale);
 				
 				System.out.println("friendlyUrl: " + friendlyUrl);
-				
-				//System.out.println(themeDisplay.getURLPortal());
-
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				System.out.println("no article!");
-				e.printStackTrace();
 			}
-			
-			
-			List<Long> layoutIds = JournalContentSearchLocalServiceUtil.getLayoutIds(groupId, false, Long.toString(articleId));
-			
+
+			//the the content exists on a page in a web content display portlet, get that URL
+			//then decide which to use
 			if (!layoutIds.isEmpty()) {
+				System.out.println("layout ids: " + layoutIds);
 				  long layoutId = layoutIds.get(0).longValue();
 				  Layout layout = LayoutLocalServiceUtil.getLayout(groupId, false, layoutId);
 				  String url = PortalUtil.getLayoutURL(layout, themeDisplay);
-				  //String url = PortalUtil.getLayoutFriendlyURL(layout, themeDisplay);
 				  //System.out.println("url: " + url);
 				  this.url = url;
-				} else if(layoutIds.isEmpty()) {  //don't forget to include IF for has display page
+				  System.out.println("built url: " + url);
+				} else if(layoutIds.isEmpty() && hasDisplayPage) {  //don't forget to include IF for has display page
 					this.url = friendlyUrl;
+				} else {
+					this.url = null;
 				}
 			
 		} else if(this.type.contains(documentClassName)) {

@@ -8,4 +8,7 @@ dependencies {
 	compileOnly 'com.liferay:com.liferay.journal.api'
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
 	compile 'com.liferay:com.liferay.portal.configuration.metatype:2.0.0'
+	// https://mvnrepository.com/artifact/com.liferay/com.liferay.dynamic.data.mapping.api
+	compileOnly group: 'com.liferay', name: 'com.liferay.dynamic.data.mapping.api', version: '5.5.0'
+
 }

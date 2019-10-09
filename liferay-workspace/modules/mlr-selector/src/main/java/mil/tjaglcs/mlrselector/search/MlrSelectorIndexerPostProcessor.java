@@ -30,12 +30,14 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
+import com.liferay.dynamic.data.mapping.kernel.DDMFormFieldValue;
 import com.liferay.dynamic.data.mapping.kernel.DDMFormValues;
 import com.liferay.dynamic.data.mapping.storage.Fields;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -148,8 +150,8 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 			String fieldName = fieldsToIndex[i].getFieldName();
 			
 			if(className == "DLFileEntryImpl") {
-				System.out.println("fieldName: " + fieldName);
-				System.out.println("fieldVal: " + fieldVal);
+				//System.out.println("fieldName: " + fieldName);
+				//System.out.println("fieldVal: " + fieldVal);
 			}
 			 
 			if(fieldVal.length() > 0 && fieldName.length()>0) {
@@ -174,22 +176,48 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 		
 		//System.out.println("fieldMap: " + fieldMap);
 		
+		System.out.println("field name: " + fieldName);
 		System.out.println("article ID: " + article.getFileEntryId());
+		System.out.println("article title: " + article.getTitle());
+		//System.out.println("article PK: " + article.getPrimaryKey());
+		//System.out.println("article expando: " + article.getExpandoBridge().getAttributes());
+		//System.out.println("article expando: " + article.getExpandoBridge().getAttributes().keySet());
+		//System.out.println("article title: " + article.get);
 		
 		Map<String, DDMFormValues> formValues = article.getDDMFormValuesMap(article.getFileVersion().getFileVersionId());
 		
-		System.out.println("formValues: " + formValues);
+		
+		for (Entry<String, DDMFormValues> entry : formValues.entrySet()) {  
+			System.out.println("entry: " + entry.getValue().getDDMFormFieldValues());
+			List<DDMFormFieldValue> list = entry.getValue().getDDMFormFieldValues();
+			//System.out.println(list.get(0).toString());
+			System.out.println("name: " + list.get(0).getName());
+			Locale locale = new Locale("en_us");
+			
+			//finally found the values. Is this all of them? How do I get by field name?
+			//or can I return them all in key value pairs?
+			System.out.println("value: " + list.get(0).getValue().getString(locale)); 
+			
+		}
+		
+		/*System.out.println("formValues: " + formValues);
+		System.out.println("formValues values: " + formValues.values().toArray()[0].toString());
 		System.out.println("formValues entrySet: " + formValues.entrySet());
 		System.out.println("formValues values: " + formValues.values());
-		System.out.println("formValues keySet: " + formValues.keySet());
+		System.out.println("formValues keySet: " + formValues.keySet());*/
 
 		//TODO: figure out reliable way to get these values. Not sure where this key comes from.
-		System.out.println("formValues: " + formValues.get("AUTO_5E6FAE31-2DF2-0D87-75A8-1B64F1ACE0CD"));
+		/*System.out.println("formValues.get(): " + formValues.get("AUTO_5E6FAE31-2DF2-0D87-75A8-1B64F1ACE0CD"));
 		
 		DDMFormValues vals = formValues.get("AUTO_5E6FAE31-2DF2-0D87-75A8-1B64F1ACE0CD");
+		
+		System.out.println("vals: " + vals);
+		
 		if(vals!=null) {
 			System.out.println("vals map: " + vals.getDDMFormFieldValuesMap());
-		}
+		} else {
+			System.out.println("vals map is null");
+		}*/
 		
 		return "";
 		

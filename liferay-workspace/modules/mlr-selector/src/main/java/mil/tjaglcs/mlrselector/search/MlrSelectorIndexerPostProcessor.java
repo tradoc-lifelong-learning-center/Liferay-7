@@ -100,6 +100,7 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 		//System.out.println(document.get("testField"));
 		
 		indexDocument(document, object, objectClass);
+		System.out.println(document);
 		
 		/*if(objectClass == "DLFileEntryImpl") {
 			document.addText("testField", "Military law Review Document");
@@ -131,35 +132,31 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 		for(int i = 0; i<fieldsToIndex.length; i++) {
 			
 			String fieldVal;
-
-			//System.out.println("fieldsToIndex[i]: " + fieldsToIndex[i]);
 			
-			//temporarily disable documents
+			String fieldName = fieldsToIndex[i].getFieldName();
+			
 			if(className == "DLFileEntryImpl") {
-				fieldVal = getDLFileMeta(object, fieldsToIndex[i].getFieldValue());
+				//System.out.println("running getDLFileMeta");
+				fieldVal = getDLFileMeta(object, fieldName);
+				//System.out.println("dl file field val: " + fieldVal);
 
 			} else {
 				//System.out.println("indexing journal");
-				fieldVal = getJournalArticleMeta(object, fieldsToIndex[i].getFieldValue());
+				//System.out.println("running getJournalArticleMeta");
+				fieldVal = getJournalArticleMeta(object, fieldName);
+				//System.out.println("journal field val: " + fieldVal);
 			}
 			
 			//fieldVal = getJournalArticleMeta(object, fieldsToIndex[i].getFieldValue());
 			
 			////
 			
-			String fieldName = fieldsToIndex[i].getFieldName();
-			
-			if(className == "DLFileEntryImpl") {
-				//System.out.println("fieldName: " + fieldName);
-				//System.out.println("fieldVal: " + fieldVal);
-			}
 			 
 			if(fieldVal.length() > 0 && fieldName.length()>0) {
+				System.out.println("adding " + fieldName + ", " + fieldVal + " to document");
 	        	document.addText(fieldName, fieldVal);
 	        	
 	        }
-			
-			
 		}
 	}
 	
@@ -176,7 +173,7 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 		
 		//System.out.println("fieldMap: " + fieldMap);
 		
-		System.out.println("field name: " + fieldName);
+		//System.out.println("field name: " + fieldName);
 		System.out.println("article ID: " + article.getFileEntryId());
 		System.out.println("article title: " + article.getTitle());
 		//System.out.println("article PK: " + article.getPrimaryKey());
@@ -188,15 +185,33 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 		
 		
 		for (Entry<String, DDMFormValues> entry : formValues.entrySet()) {  
-			System.out.println("entry: " + entry.getValue().getDDMFormFieldValues());
+			//System.out.println("entry: " + entry.getValue().getDDMFormFieldValues());
 			List<DDMFormFieldValue> list = entry.getValue().getDDMFormFieldValues();
 			//System.out.println(list.get(0).toString());
-			System.out.println("name: " + list.get(0).getName());
+			//System.out.println("name: " + list.get(0).getName());
 			Locale locale = new Locale("en_us");
+			
+			System.out.println("fieldName: " + fieldName);
+			
+			//TODO: Probably a better way to grab the value than loop inside a loop
+			for(int i = 0; i<list.size(); i++) {
+				//System.out.println("name: " + list.get(i).getName());
+				//System.out.println("value: " + list.get(i).getValue().getString(locale));
+				
+				String name = list.get(i).getName();
+				System.out.println("name: " + name);
+				
+				
+				//if(name==fieldName) {
+				if(name.equals(fieldName)) {
+					System.out.println("name: " + name + ", fieldName: " + fieldName);
+					fieldVal = list.get(i).getValue().getString(locale);
+				}
+			}
 			
 			//finally found the values. Is this all of them? How do I get by field name?
 			//or can I return them all in key value pairs?
-			System.out.println("value: " + list.get(0).getValue().getString(locale)); 
+			//System.out.println("value: " + list.get(0).getValue().getString(locale)); 
 			
 		}
 		
@@ -219,7 +234,10 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 			System.out.println("vals map is null");
 		}*/
 		
-		return "";
+		//TODO: not sure why this was looking like a single item array. Probably a better way to do this.
+		System.out.println("returning fieldVal: " + fieldVal.replaceAll("[\"\\[\\]]", ""));
+		return fieldVal.replaceAll("[\"\\[\\]]", "");
+		//return "Military Law Review";
 		
 		/*try {
 			Map<String,Field> fieldMap = article.getFieldsMap(article.getFileVersion().getFileVersionId());

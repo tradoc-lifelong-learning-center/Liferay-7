@@ -662,9 +662,8 @@ public class Publication {
 			//Query stringQuery = new StringQuery("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.portlet.journal.model.JournalArticle AND head:true) OR entryClassName:com.liferay.portlet.documentlibrary.model.DLFileEntry)");
 			
 			
-			//Query stringQuery = new StringQuery("(publicationName: " + pubName + ") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
-			//Query stringQuery = new StringQuery("(publicationName:\"Military Law Review\") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
-			Query stringQuery = new StringQuery("(publicationName:\"" + pubName + "\") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
+			//Query stringQuery = new StringQuery("(publicationName:\"" + pubName + "\") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true))");
+			Query stringQuery = new StringQuery("(publicationName:\"" + pubName + "\") AND (status:0) AND ((entryClassName:com.liferay.journal.model.JournalArticle AND head:true) OR entryClassName:com.liferay.document.library.kernel.model.DLFileEntry)");
 			//Query stringQuery = new StringQuery("testField: \"Military Law Review Document\"");
 
 			

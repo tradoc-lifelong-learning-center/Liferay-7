@@ -1,4 +1,5 @@
-Bundle-Name: mlr-selector
+Bundle-Name: MLR Selector
 Bundle-SymbolicName: mil.tjaglcs.mlrselector
 Bundle-Version: 1.0.0
 Export-Package: mil.tjaglcs.mlrselector.constants
+Bundle-Category: TJAGLCS

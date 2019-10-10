@@ -95,20 +95,7 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 			objectClass = documentClassName;
 		}
 		
-		//document.addText("testField", "testFieldValue");
-		
-		//System.out.println(document.get("testField"));
-		
 		indexDocument(document, object, objectClass);
-		System.out.println(document);
-		
-		/*if(objectClass == "DLFileEntryImpl") {
-			document.addText("testField", "Military law Review Document");
-		} else if(objectClass == "JournalArticleImpl"){
-			document.addText("testField", "Military law Review Journal");
-		} else {
-			document.addText("testField", "Military law Review Other");
-		}*/
 
 		if (_log.isInfoEnabled()) {
 			_log.info("postProcessDocument");
@@ -136,24 +123,15 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 			String fieldName = fieldsToIndex[i].getFieldName();
 			
 			if(className == "DLFileEntryImpl") {
-				//System.out.println("running getDLFileMeta");
 				fieldVal = getDLFileMeta(object, fieldName);
-				//System.out.println("dl file field val: " + fieldVal);
 
 			} else {
-				//System.out.println("indexing journal");
-				//System.out.println("running getJournalArticleMeta");
 				fieldVal = getJournalArticleMeta(object, fieldName);
-				//System.out.println("journal field val: " + fieldVal);
 			}
-			
-			//fieldVal = getJournalArticleMeta(object, fieldsToIndex[i].getFieldValue());
-			
-			////
 			
 			 
 			if(fieldVal.length() > 0 && fieldName.length()>0) {
-				System.out.println("adding " + fieldName + ", " + fieldVal + " to document");
+				//System.out.println("adding " + fieldName + ", " + fieldVal + " to document");
 	        	document.addText(fieldName, fieldVal);
 	        	
 	        }
@@ -164,22 +142,12 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 		DLFileEntry article = (DLFileEntry) object;
 		String fieldVal = "";
 		
-		System.out.println("--------------------");
-		System.out.println("processing field");
-		
-		//System.out.println(article);
-		
-		//Map<String,Field> fieldMap = article.getFieldsMap(article.getFileVersion().getFileVersionId());
-		
-		//System.out.println("fieldMap: " + fieldMap);
+		//System.out.println("--------------------");
+		//System.out.println("processing field");
 		
 		//System.out.println("field name: " + fieldName);
-		System.out.println("article ID: " + article.getFileEntryId());
-		System.out.println("article title: " + article.getTitle());
-		//System.out.println("article PK: " + article.getPrimaryKey());
-		//System.out.println("article expando: " + article.getExpandoBridge().getAttributes());
-		//System.out.println("article expando: " + article.getExpandoBridge().getAttributes().keySet());
-		//System.out.println("article title: " + article.get);
+		//System.out.println("article ID: " + article.getFileEntryId());
+		//System.out.println("article title: " + article.getTitle());
 		
 		Map<String, DDMFormValues> formValues = article.getDDMFormValuesMap(article.getFileVersion().getFileVersionId());
 		
@@ -191,7 +159,7 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 			//System.out.println("name: " + list.get(0).getName());
 			Locale locale = new Locale("en_us");
 			
-			System.out.println("fieldName: " + fieldName);
+			//System.out.println("fieldName: " + fieldName);
 			
 			//TODO: Probably a better way to grab the value than loop inside a loop
 			for(int i = 0; i<list.size(); i++) {
@@ -199,96 +167,27 @@ public class MlrSelectorIndexerPostProcessor implements IndexerPostProcessor {
 				//System.out.println("value: " + list.get(i).getValue().getString(locale));
 				
 				String name = list.get(i).getName();
-				System.out.println("name: " + name);
+				//System.out.println("name: " + name);
 				
 				
 				//if(name==fieldName) {
 				if(name.equals(fieldName)) {
-					System.out.println("name: " + name + ", fieldName: " + fieldName);
+					//System.out.println("name: " + name + ", fieldName: " + fieldName);
 					fieldVal = list.get(i).getValue().getString(locale);
 				}
 			}
 			
-			//finally found the values. Is this all of them? How do I get by field name?
-			//or can I return them all in key value pairs?
-			//System.out.println("value: " + list.get(0).getValue().getString(locale)); 
-			
 		}
 		
-		/*System.out.println("formValues: " + formValues);
-		System.out.println("formValues values: " + formValues.values().toArray()[0].toString());
-		System.out.println("formValues entrySet: " + formValues.entrySet());
-		System.out.println("formValues values: " + formValues.values());
-		System.out.println("formValues keySet: " + formValues.keySet());*/
-
-		//TODO: figure out reliable way to get these values. Not sure where this key comes from.
-		/*System.out.println("formValues.get(): " + formValues.get("AUTO_5E6FAE31-2DF2-0D87-75A8-1B64F1ACE0CD"));
-		
-		DDMFormValues vals = formValues.get("AUTO_5E6FAE31-2DF2-0D87-75A8-1B64F1ACE0CD");
-		
-		System.out.println("vals: " + vals);
-		
-		if(vals!=null) {
-			System.out.println("vals map: " + vals.getDDMFormFieldValuesMap());
-		} else {
-			System.out.println("vals map is null");
-		}*/
 		
 		//TODO: not sure why this was looking like a single item array. Probably a better way to do this.
-		System.out.println("returning fieldVal: " + fieldVal.replaceAll("[\"\\[\\]]", ""));
 		return fieldVal.replaceAll("[\"\\[\\]]", "");
-		//return "Military Law Review";
-		
-		/*try {
-			Map<String,Field> fieldMap = article.getFieldsMap(article.getFileVersion().getFileVersionId());
-			
-			for (Map.Entry<String,Fields> entry : fieldMap.entrySet()) {  
-	            //if(entry.getValue().get(fieldName).getValue()!=null) {
-				
-				if(entry.getValue().get(fieldName)!=null) {
-
-	            	if(fieldName=="publicationAuthors") {
-	            		//author names need to come back as an array in order to handle multiple names
-	            		String[] authorsArray = (String[]) entry.getValue().get(fieldName).getValue();
-	            		String authorsString = "";
-
-	            		for(int i=0; i<authorsArray.length; i++) {
-	            			//System.out.println(i + ": " + authorsArray[i]);
-	            			if(i>0) {
-	            				authorsString+="|";
-	            			}
-	            			authorsString+=authorsArray[i];
-	            			
-	            		}
-	            		
-	            		fieldVal = authorsString;
-	            	} else {
-		            	fieldVal = (String) entry.getValue().get(fieldName).getValue().toString();
-	            	}
-	            	
-	            	
-	            	
-	            }
-	            
-	            
-	            
-	    	} 
-			
-			return fieldVal;	
-			
-		} catch(Exception e) {
-			System.out.println("dlfileentry index error");
-			System.out.println(e);
-			//e.printStackTrace();
-			return "";
-		}*/
 	}
 
 
 	private String getJournalArticleMeta(Object object, String fieldName) {
 		JournalArticle article = (JournalArticle) object;
-		
-		//System.out.println("article: " + article.getArticleId());
+
 		
 		//don't need a PDF type for journals
 		if(fieldName=="publicationPdfType") {

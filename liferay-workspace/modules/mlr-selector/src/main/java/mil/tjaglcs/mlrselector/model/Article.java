@@ -56,6 +56,7 @@ public class Article implements Comparable<Article> {
 		this.authors = authors;
 		
 		if(type.contains("DLFileEntry")) {
+			//this.title  = assemblePdfTitle();
 			this.title  = assemblePdfTitle();
 		} else { 
 			this.title = title;
@@ -260,7 +261,11 @@ public class Article implements Comparable<Article> {
 		} else if(this.type.contains(documentClassName)) {
 			DLFileEntry entry = DLFileEntryLocalServiceUtil.fetchDLFileEntry(this.id);
 			
-			String urlTitle = URLEncoder.encode(this.title, "UTF-8");
+			
+			String fileName = entry.getFileName();
+			
+			String urlTitle = URLEncoder.encode(fileName, "UTF-8");
+			
 			long folderId = entry.getFolderId();
 			String uuid = entry.getUuid();
 
